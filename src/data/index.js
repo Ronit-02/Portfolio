@@ -1,36 +1,52 @@
+import SoundscapeAppMockup from "../images/soundscape/mockup.png";
+import SoundscapeAnalyzeScreen from "../images/soundscape/analyze-screen.png";
+import SoundscapePlayScreen from "../images/soundscape/play-screen.png";
+
+import InkRiderAppMockup from "../images/ink-rider/mockup.png";
+import InkRiderCollectionsPage from "../images/ink-rider/collections-page.png";
+import InkRiderTrendingPage from "../images/ink-rider/trending-page.png";
+
+import ArtisticallySearchPage from "../images/artistically/search-page.png";
+import ArtisticallyProductPage from "../images/artistically/product-page.png";
+import ArtisticallyCartPage from "../images/artistically/cart-page.png";
+import ArtisticallyAppMockup from "../images/artistically/mockup-2.png";
+
+import FoodBlogCover from "../images/blogs/food-blog.jpg";
+import MountainBlogCover from "../images/blogs/mountain-blog.jpg";
+import MinimalismBlogCover from "../images/blogs/minimalism-blog.jpg";
+
 export const projects = [
   {
     id: 1,
     title: "Soundscape",
     subtitle: "Moment-Aware Music Recommendation App",
-    category: "Full Stack",
-    service: "React Native + FastAPI",
+    category: "Mobile",
+    service: "React Native + FastAPI + Redis",
     year: "2024",
-    github: "https://github.com/ronitkhatri",
-    image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&q=80",
-    intro: "A music companion that understands context — not just your mood, but your moment. Soundscape generates hyper-personalized playlists by fusing time-of-day, location signals, listening history, and real-time feedback.",
+    github: "",
+    image: SoundscapeAppMockup,
+    intro: "A music companion that understands context and not just your mood, but your moment. Soundscape generates hyper-personalized playlists by fusing time-of-day, location signals, listening history, and real-time feedback.",
     design: {
       problem: "Existing music apps treat recommendation as a static preference problem. They ask 'what do you like?' but never 'what do you need right now?' A gym playlist at 11 PM feels wrong. A chill lo-fi set during a morning run misses the mark.",
-      solution: "We designed a 'Vibe Detection' flow — a swipeable card interface where users select from ambient signal cards (Morning Focus, Deep Work, Post-Gym, Late Night) rather than genres. This removes cognitive load and maps human states to musical qualities.",
+      solution: "We designed a 'Vibe Detection' flow which uses a swipeable card interface where users select from ambient signal cards (Morning Focus, Deep Work, Post-Gym, Late Night) rather than genres. This removes cognitive load and maps human states to musical qualities.",
       uxDecisions: [
         { title: "Dark immersive theme", desc: "Music is an intimate experience. Light mode felt clinical. We chose near-black backgrounds with red accent to evoke the feel of a concert hall or late-night studio." },
-        { title: "Floating navigation", desc: "Bottom nav tabs interrupt the listening state. A floating pill nav stays out of the way but is always reachable — inspired by how AirPods controls live just a long press away." },
-        { title: "Haptic feedback moments", desc: "Every playlist generation triggers a subtle haptic pulse. Physical feedback signals that something real just happened — your moment has been understood." },
+        { title: "Floating navigation", desc: "Bottom nav tabs interrupt the listening state. A floating pill nav stays out of the way but is always reachable. Inspired by how AirPods controls live just a long press away." },
+        { title: "Haptic feedback moments", desc: "Every playlist generation triggers a subtle haptic pulse. Physical feedback signals that something real just happened, your moment has been understood." },
       ],
       screens: [
-        { label: "Onboarding", image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=80" },
-        { label: "Vibe Detection", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80" },
-        { label: "Now Playing", image: "https://images.unsplash.com/photo-1614149162883-504ce4d13909?w=600&q=80" },
+        { label: "Analyze", image: SoundscapeAnalyzeScreen },
+        { label: "Play", image: SoundscapePlayScreen },
       ],
     },
     code: {
-      why: "React Native was chosen over Flutter for its JavaScript ecosystem alignment — the recommendation logic is shared with a web dashboard via a monorepo setup. FastAPI on the backend because Python's ML library support (scikit-learn, spotipy) is unmatched and FastAPI's async handlers handle concurrent playlist requests without blocking.",
+      why: "React Native was chosen over Flutter for its JavaScript ecosystem alignment. The recommendation logic is shared with a web dashboard via a monorepo setup. FastAPI on the backend because Python's ML library support (scikit-learn, spotipy) is unmatched and FastAPI's async handlers handle concurrent playlist requests without blocking.",
       architecture: "The system is split into three services: an Ingestion Service that captures listening events and context signals, a Recommendation Engine running a hybrid collaborative + content-based model, and a Delivery Layer that caches results in Redis for < 200ms response times on repeated requests.",
       techChoices: [
         { tech: "FastAPI", reason: "Async-first, Pydantic validation out of the box, auto-generated OpenAPI docs. Deployed 3× faster than a Django equivalent in our prototype." },
-        { tech: "PostgreSQL + Redis", reason: "Postgres for durable user and listening history. Redis for ephemeral playlist cache — TTL of 30 min per session context. No stale recommendations." },
+        { tech: "PostgreSQL + Redis", reason: "Postgres for durable user and listening history. Redis for ephemeral playlist cache, TTL of 30 min per session context. No stale recommendations." },
         { tech: "React Native + Expo", reason: "Expo's managed workflow eliminated 80% of native config. Over-the-air updates meant we could push recommendation model improvements without an App Store review cycle." },
-        { tech: "Spotipy + Spotify API", reason: "Full access to audio features (tempo, valence, energy, danceability) per track — the actual numerical backbone of the recommendation model." },
+        { tech: "Spotipy + Spotify API", reason: "Full access to audio features (tempo, valence, energy, danceability) per track which forms the actual numerical backbone of the recommendation model." },
       ],
       challenges: [
         { title: "Cold start problem", desc: "New users have no listening history. Solved with a 3-question onboarding flow that maps answers to a seed vector, letting the model start with a reasonable prior." },
@@ -42,38 +58,37 @@ export const projects = [
   {
     id: 2,
     title: "Ink Rider",
-    subtitle: "Full-Stack Content Publishing Platform",
-    category: "Full Stack",
+    subtitle: "Content Publishing Platform",
+    category: "Web",
     service: "React + Node + MongoDB",
-    year: "2023",
-    github: "https://github.com/ronitkhatri",
-    image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80",
-    intro: "A content publishing and discovery platform built for writers who want to own their audience. Ink Rider combines the editorial feel of Medium with the community energy of Reddit — without the algorithmic noise.",
+    year: "2024",
+    github: "",
+    image: InkRiderAppMockup,
+    intro: "A content publishing and discovery platform built for writers who want to own their audience. Ink Rider combines the editorial feel of Medium with the community energy of Reddit without the algorithmic noise.",
     design: {
       problem: "Most content platforms optimize for engagement at the cost of the writer. Algorithms bury niche content. Monetization is opaque. Writers don't know who actually read their work or why it resonated.",
-      solution: "Ink Rider gives writers a 'Reader Map' — a visual breakdown of who read their post, how far they scrolled, and what they highlighted. The design language is deliberately editorial: wide margins, generous line-height, serif display type. Reading here should feel like a magazine.",
+      solution: "Ink Rider gives writers a 'Reader Map' which provides a visual breakdown of who read their post, how far they scrolled, and what they highlighted. The design language is deliberately editorial: wide margins, generous line-height, serif display type. Reading here should feel like a magazine.",
       uxDecisions: [
-        { title: "Progressive disclosure editor", desc: "The write page starts completely blank — no toolbars, no formatting options. They appear only when text is selected. Writing first, formatting second." },
+        { title: "Progressive disclosure editor", desc: "The write page starts completely blank, no toolbars, no formatting options. They appear only when text is selected. Writing first, formatting second." },
         { title: "Highlight-to-comment", desc: "Inline comments live next to the paragraph they reference, not in a separate thread. Readers annotate in context, writers see exactly what landed." },
-        { title: "Genre tagging as personality", desc: "Tags aren't metadata — they're displayed as large pills with custom color coding per genre, making a post's identity immediately legible before you read a word." },
+        { title: "Genre tagging as personality", desc: "Tags aren't metadata, they're displayed as large pills with custom color coding per genre, making a post's identity immediately legible before you read a word." },
       ],
       screens: [
-        { label: "Feed", image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&q=80" },
-        { label: "Editor", image: "https://images.unsplash.com/photo-1516414447565-b14be0adf13e?w=600&q=80" },
-        { label: "Reader Map", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" },
+        { label: "Trending", image: InkRiderTrendingPage },
+        { label: "Collections", image: InkRiderCollectionsPage },
       ],
     },
     code: {
-      why: "Node + Express for the API because the team was already JavaScript-native and we wanted to share validation schemas between client and server via a shared types package. MongoDB was chosen over Postgres because content structure (posts, nested comments, tags) is document-shaped — no FK joins needed.",
+      why: "Node + Express for the API because the team was already JavaScript-native and we wanted to share validation schemas between client and server via a shared types package. MongoDB was chosen over Postgres because content structure (posts, nested comments, tags) is document-shaped no FK joins needed.",
       architecture: "Three-tier architecture: React SPA with Redux Toolkit for client state, Express REST API with JWT auth middleware, MongoDB Atlas with a separate read replica for analytics queries. React Query handles server state and automatic background refetching.",
       techChoices: [
-        { tech: "MongoDB", reason: "Content posts are naturally document-shaped — variable field sets, nested comment trees. Mongo's flexible schema let us iterate on the post model 6 times in month one without migrations." },
+        { tech: "MongoDB", reason: "Content posts are naturally document-shaped variable field sets, nested comment trees. Mongo's flexible schema let us iterate on the post model 6 times in month one without migrations." },
         { tech: "Redux Toolkit", reason: "Global state for auth, draft posts, and notification count. RTK's createSlice cut boilerplate by ~60% vs raw Redux. RTK Query handled the feed pagination layer." },
-        { tech: "React Query", reason: "Stale-while-revalidate strategy for the feed — users see cached posts instantly, fresh data loads in background. Perceived load time dropped by 40%." },
-        { tech: "JWT + Refresh Tokens", reason: "Short-lived access tokens (15 min) with httpOnly cookie refresh tokens. XSS-resistant auth without sacrificing UX — silent token refresh is invisible to the user." },
+        { tech: "React Query", reason: "Stale-while-revalidate strategy for the feed users see cached posts instantly, fresh data loads in background. Perceived load time dropped by 40%." },
+        { tech: "JWT + Refresh Tokens", reason: "Short-lived access tokens (15 min) with httpOnly cookie refresh tokens. XSS-resistant auth without sacrificing UX, silent token refresh is invisible to the user." },
       ],
       challenges: [
-        { title: "Real-time notifications", desc: "Polling every 5s was wasteful. Implemented Server-Sent Events (SSE) for a persistent one-way channel — lighter than WebSockets for a read-heavy notification stream." },
+        { title: "Real-time notifications", desc: "Polling every 5s was wasteful. Implemented Server-Sent Events (SSE) for a persistent one-way channel lighter than WebSockets for a read-heavy notification stream." },
         { title: "Rich text editor", desc: "Quill.js was too heavy. Tiptap (ProseMirror-based) gave us a headless editor we could style completely from scratch, matching the editorial design system." },
       ],
       stack: ["React", "Redux Toolkit", "React Query", "Node.js", "Express", "MongoDB", "JWT", "Tiptap"],
@@ -81,31 +96,31 @@ export const projects = [
   },
   {
     id: 3,
-    title: "FraudGuard",
-    subtitle: "Real-Time ATM Fraud Detection Plugin",
-    category: "Full Stack",
-    service: "React + Flask + ML",
-    year: "2024",
-    github: "https://github.com/ronitkhatri",
-    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80",
-    intro: "A plug-and-play fraud detection layer for ATM networks. FraudGuard intercepts transactions in real-time, scores them against a geo-velocity model, and flags anomalies before funds move — reducing fraudulent transactions by 15% in pilot testing.",
+    title: "Artistically",
+    subtitle: "Modern Art E-Commerce Platform",
+    category: "Web",
+    service: "Next",
+    year: "2025",
+    github: "",
+    image: ArtisticallyAppMockup,
+    intro: "A modern art e-commerce platform for discovering, exploring, and purchasing original artwork. Artistically connects collectors with emerging artists, providing a curated experience that emphasizes the story behind each piece.",
     design: {
-      problem: "Bank fraud dashboards are designed for auditors, not operators. By the time a fraud analyst spots a pattern, the damage is done. The UI needed to surface risk at the transaction level, in real time, with enough context to act — not just report.",
-      solution: "A live transaction feed with a heat-map overlay showing geo-velocity violations. Cards animate in as transactions arrive. Red glow pulses on flagged transactions. The design system is deliberately high-contrast — this is a tool used in bright, noisy environments.",
+      problem: "Bank fraud dashboards are designed for auditors, not operators. By the time a fraud analyst spots a pattern, the damage is done. The UI needed to surface risk at the transaction level, in real time, with enough context to act and not just report.",
+      solution: "A live transaction feed with a heat-map overlay showing geo-velocity violations. Cards animate in as transactions arrive. Red glow pulses on flagged transactions. The design system is deliberately high-contrast, this is a tool used in bright, noisy environments.",
       uxDecisions: [
         { title: "Traffic light risk scoring", desc: "Green / Amber / Red risk badges on every transaction card. Operators pattern-match visually in < 1 second without reading numbers." },
         { title: "Map-first anomaly view", desc: "When a card is used 400km from its last transaction in 20 minutes, the map view shows both pins with a red line between them. Spatial intuition beats raw velocity numbers." },
-        { title: "One-click freeze", desc: "Flagged transactions have a single 'Freeze Card' button. No confirmation dialogs. Speed is the product — every second costs money." },
+        { title: "One-click freeze", desc: "Flagged transactions have a single 'Freeze Card' button. No confirmation dialogs. Speed is the product every second costs money." },
       ],
       screens: [
-        { label: "Live Feed", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" },
-        { label: "Anomaly Map", image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80" },
-        { label: "Analytics", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80" },
+        { label: "Search", image: ArtisticallySearchPage },
+        { label: "Product", image: ArtisticallyProductPage },
+        { label: "Cart", image: ArtisticallyCartPage },
       ],
     },
     code: {
       why: "Flask was chosen over FastAPI here because the team had an existing ML pipeline in scikit-learn and Flask's lightweight footprint let us embed the model directly in the API process without microservice overhead. Pandas for transaction aggregation because the feature engineering (rolling windows, velocity calculations) maps cleanly to DataFrame operations.",
-      architecture: "Plugin architecture with a thin client-side SDK that intercepts ATM software API calls and POSTs transaction data to the FraudGuard scoring endpoint. The Flask API runs the geo-velocity model synchronously — P99 latency is 40ms, well within the 500ms ATM timeout window.",
+      architecture: "Plugin architecture with a thin client-side SDK that intercepts ATM software API calls and POSTs transaction data to the FraudGuard scoring endpoint. The Flask API runs the geo-velocity model synchronously, P99 latency is 40ms, well within the 500ms ATM timeout window.",
       techChoices: [
         { tech: "Flask + Gunicorn", reason: "Synchronous model inference doesn't benefit from async I/O. Flask's simplicity let us focus on the scoring logic. Gunicorn with 4 workers handles ~200 req/s on a single t3.medium." },
         { tech: "Pandas", reason: "Feature engineering requires rolling time windows across transaction history. Pandas vectorized operations run 50× faster than equivalent Python loops on 10k-row transaction tables." },
@@ -113,8 +128,8 @@ export const projects = [
         { tech: "React + Recharts", reason: "The dashboard needed live-updating charts. Recharts' declarative API made it easy to stream new data points into time-series charts without re-rendering the entire chart." },
       ],
       challenges: [
-        { title: "Geo-velocity false positives", desc: "Airport transactions triggered velocity alerts constantly. Added a 'known airport' geofence list — transactions within 5km of major airports get a velocity exception window of 4h." },
-        { title: "Latency SLA", desc: "The ATM protocol times out at 500ms. Flask + model inference was hitting 220ms at P99. Moved model loading to module-level (not per-request) and added Gunicorn pre-fork — dropped to 38ms P99." },
+        { title: "Geo-velocity false positives", desc: "Airport transactions triggered velocity alerts constantly. Added a 'known airport' geofence list, transactions within 5km of major airports get a velocity exception window of 4h." },
+        { title: "Latency SLA", desc: "The ATM protocol times out at 500ms. Flask + model inference was hitting 220ms at P99. Moved model loading to module-level (not per-request) and added Gunicorn pre-fork dropped to 38ms P99." },
       ],
       stack: ["React", "Flask", "Pandas", "scikit-learn", "PostgreSQL", "Recharts", "Python"],
     },
@@ -128,45 +143,42 @@ export const blogs = [
     category: "Travel",
     readTime: "7 min read",
     date: "17 February 2024",
-    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80",
+    image: FoodBlogCover,
     content: "Food has the magical ability to evoke memories, bring people together, and create unforgettable experiences. Throughout my travels and culinary adventures, I have encountered numerous dishes that tantalized my taste buds and left a lasting impression. However, a few stand out as the best food I've had so far, each telling its own story of flavour, culture, and craftsmanship.",
   },
   {
     id: 2,
-    title: "My Journey of Starting a new Business",
-    category: "Personal",
-    readTime: "5 min read",
-    date: "3 January 2024",
-    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80",
-    content: "Starting a business is one of the most exhilarating and challenging journeys you can embark on. It requires courage, resilience, and an unwavering belief in your vision.",
-  },
-  {
-    id: 3,
     title: "A Place near the Mountains",
     category: "Travel",
     readTime: "15 min read",
     date: "10 December 2023",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+    image: MountainBlogCover,
     content: "There's something profoundly humbling about standing at the foot of a mountain. The sheer scale, the ancient permanence, the way clouds drift lazily around distant peaks.",
   },
   {
-    id: 4,
+    id: 3,
     title: "The Art of Minimalist Design",
     category: "Technical",
     readTime: "8 min read",
     date: "5 November 2023",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
-    content: "Minimalism in design isn't about removing elements — it's about keeping only what serves a purpose. Every pixel should earn its place.",
+    image: MinimalismBlogCover,
+    content: "Minimalism in design isn't about removing elements but it's about keeping only what serves a purpose. Every pixel should earn its place.",
   },
 ];
 
 export const photos = [
-  { id: 1, year: "2024", image: "https://images.unsplash.com/photo-1491466424936-e304919aada7?w=900&q=80", alt: "Winter road" },
-  { id: 2, year: "2024", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80", alt: "Mountain landscape" },
-  { id: 3, year: "2024", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=80", alt: "Sunset mountains" },
-  { id: 4, year: "2023", image: "https://images.unsplash.com/photo-1514565131-fce0801e6915?w=900&q=80", alt: "Autumn trees" },
-  { id: 5, year: "2023", image: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=900&q=80", alt: "Travel landscape" },
-  { id: 6, year: "2023", image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=900&q=80", alt: "Night sky" },
+  { id: 1, year: "2025", image: "/gallery/image-1.jpg", alt: "Winter road" },
+  { id: 2, year: "2024", image: "/gallery/image-2.jpg", alt: "Mountain landscape" },
+  { id: 3, year: "2024", image: "/gallery/image-3.jpg", alt: "Sunset mountains" },
+  { id: 4, year: "2025", image: "/gallery/image-4.jpg", alt: "Autumn trees" },
+  { id: 5, year: "2023", image: "/gallery/image-5.jpg", alt: "Travel landscape" },
+  { id: 6, year: "2023", image: "/gallery/image-6.jpg", alt: "Night sky" },
+  { id: 7, year: "2025", image: "/gallery/image-7.jpg", alt: "Night sky" },
+  { id: 8, year: "2023", image: "/gallery/image-8.jpg", alt: "Night sky" },
+  { id: 9, year: "2023", image: "/gallery/image-9.jpg", alt: "Night sky" },
+  { id: 10, year: "2026", image: "/gallery/image-10.jpg", alt: "Night sky" },
+  { id: 11, year: "2026", image: "/gallery/image-11.jpg", alt: "Night sky" },
+  { id: 12, year: "2023", image: "/gallery/image-12.jpg", alt: "Night sky" },
 ];
 
 export const experience = [
