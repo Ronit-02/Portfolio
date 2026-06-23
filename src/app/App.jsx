@@ -100,7 +100,6 @@ function AppInner() {
       </main>
 
       <BottomNav activePage={activePage} onNavigate={handleNavigate} />
-      <HintToast />
     </div>
   );
 }
@@ -156,49 +155,6 @@ function MissingRouteState({ title, message, buttonLabel, onBack }) {
         </button>
       </div>
     </section>
-  );
-}
-
-function HintToast() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (!sessionStorage.getItem("cmd_hint")) {
-      const timer = setTimeout(() => setVisible(true), 2800);
-      return () => clearTimeout(timer);
-    }
-
-    return undefined;
-  }, []);
-
-  useEffect(() => {
-    if (!visible) return undefined;
-
-    sessionStorage.setItem("cmd_hint", "1");
-    const timer = setTimeout(() => setVisible(false), 5000);
-
-    return () => clearTimeout(timer);
-  }, [visible]);
-
-  return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 8 }}
-          transition={{ type: "spring", stiffness: 400, damping: 28 }}
-          className="fixed bottom-24 right-5 z-40 cursor-pointer"
-          onClick={() => setVisible(false)}
-        >
-          <div className="rounded-2xl border border-[#4075F7]/25 bg-white/95 px-4 py-3 text-sm text-neutral-700 shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-md dark:bg-[#1c1c1e]/95 dark:text-neutral-200">
-            <p className="font-mono text-xs text-neutral-500 dark:text-neutral-400">
-              <span className="text-[#4075F7]">$</span> press / for command menu
-            </p>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
   );
 }
 

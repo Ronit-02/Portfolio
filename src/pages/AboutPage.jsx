@@ -4,12 +4,12 @@ import SectionWrapper from "../components/common/SectionWrapper";
 import SectionTitle from "../components/common/SectionTitle";
 import { ChevronDown } from "../icons";
 import { faqs } from "../data";
+import ProfileImage from "../images/profile-pic.jpg";
 
 const focusAreas = [
   "Interface Design",
-  "Frontend Development",
+  "Full Stack Development",
   "Design Systems",
-  "Motion",
 ];
 
 const sectionVariants = {
@@ -61,30 +61,25 @@ export default function AboutPage() {
           variants={fadeUpVariants}
           className="flex flex-col justify-between"
         >
-          <div>
-            <p className="mb-3 text-sm uppercase tracking-[0.28em] text-blue-500 dark:text-blue-400">
-              About the way I work
-            </p>
-
-            <h2 className="max-w-xs text-4xl font-medium leading-[0.95] tracking-tight text-gray-900 dark:text-white md:text-5xl">
-              Ronit Khatri
-            </h2>
+          <div className="flex flex-col gap-4">
 
             <p className="mt-4 text-base font-medium text-gray-600 dark:text-gray-400">
               Designer / Developer
             </p>
+
+            <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+              I design the feeling of a product, then build the system that
+              makes it real.
+            </p>
           </div>
 
           <div className="mt-10 lg:mt-0">
-            <p className="mb-4 text-sm text-gray-400 dark:text-gray-500">
-              Focus
-            </p>
 
-            <div className="flex max-w-sm flex-wrap gap-3">
+            <div className="flex flex-wrap max-w-sm gap-3">
               {focusAreas.map((area) => (
                 <span
                   key={area}
-                  className="rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600 transition-colors duration-300 hover:border-blue-200 hover:bg-blue-100 dark:border-blue-900/50 dark:bg-blue-950/20 dark:text-blue-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/30"
+                  className="px-4 py-2 text-sm font-medium text-blue-600 transition-colors duration-300 border border-blue-100 rounded-full bg-blue-50 hover:border-blue-200 hover:bg-blue-100 dark:border-blue-900/50 dark:bg-blue-950/20 dark:text-blue-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/30"
                 >
                   {area}
                 </span>
@@ -99,15 +94,15 @@ export default function AboutPage() {
           className="flex items-center justify-center"
         >
           <div className="w-full max-w-[300px]">
-            <div className="overflow-hidden rounded-2xl bg-gray-100 shadow-sm dark:bg-gray-900">
+            <div className="overflow-hidden bg-gray-100 shadow-sm rounded-2xl dark:bg-gray-900">
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=700&q=80"
+                src={ProfileImage}
                 alt="Ronit Khatri"
                 className="aspect-[4/5] w-full object-cover object-center"
               />
             </div>
 
-            <div className="mt-5 flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-2 mt-5">
               <span className="h-1.5 w-1.5 rounded-full bg-blue-500 dark:bg-blue-400" />
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Clear, useful, intentional.
@@ -122,15 +117,11 @@ export default function AboutPage() {
           className="flex flex-col justify-between lg:items-end"
         >
           <div className="max-w-sm mt-10">
-            <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
-              I design the feeling of a product, then build the system that
-              makes it real.
-            </p>
 
             <p className="mt-5 text-base leading-relaxed text-gray-600 dark:text-gray-400">
               I&apos;m focused on creating digital experiences that feel calm,
-              useful, and considered. My work sits between visual design and
-              frontend development, where ideas become interfaces people can
+              useful, and considered. My work sits between visual design and 
+              development, where ideas become interfaces people can
               actually use.
             </p>
 
@@ -154,12 +145,9 @@ export default function AboutPage() {
           damping: 26,
           delay: 0.2,
         }}
-        className="mx-auto mt-16 max-w-4xl"
+        className="max-w-4xl mx-auto mt-16"
       >
         <div className="mb-8">
-          <p className="mb-3 text-sm uppercase tracking-[0.28em] text-blue-500 dark:text-blue-400">
-            Notes
-          </p>
 
           <h3 className="text-2xl font-medium text-gray-900 dark:text-white">
             A few details about how I think and work.
@@ -182,7 +170,7 @@ export default function AboutPage() {
                   onClick={() => toggle(i)}
                   aria-expanded={isOpen}
                   aria-controls={answerId}
-                  className="group flex w-full items-center justify-between gap-6 py-6 text-left"
+                  className="flex items-center justify-between w-full gap-6 py-6 text-left group"
                 >
                   <div className="flex items-start gap-5">
                     <span className="mt-1 text-sm text-gray-400 dark:text-gray-500">
@@ -194,7 +182,7 @@ export default function AboutPage() {
                     </span>
                   </div>
 
-                  <span className="shrink-0 text-gray-400">
+                  <span className="text-gray-400 shrink-0">
                     <ChevronDown rotated={isOpen} />
                   </span>
                 </button>
