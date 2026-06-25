@@ -52,13 +52,13 @@ export default function TopNav() {
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="sticky top-0 z-40 w-full overflow-x-hidden border-b border-gray-100 bg-white dark:border-gray-800 dark:bg-[#0f0f0f]"
     >
-      <header className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-2 sm:px-6 sm:py-2.5 md:px-12">
+      <header className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4 sm:px-6 sm:py-2.5 md:px-12 md:py-4">
         <motion.div
           initial="rest"
           animate="rest"
           whileHover="hover"
           whileTap={{ scale: 0.96 }}
-          className="relative inline-flex shrink-0 cursor-default"
+          className="relative inline-flex cursor-default shrink-0"
         >
           <motion.span
             variants={{
@@ -90,15 +90,15 @@ export default function TopNav() {
         <motion.div
           whileHover={{ y: -1 }}
           transition={{ type: "spring", stiffness: 400, damping: 24 }}
-          className="flex min-w-0 flex-col items-end text-right"
+          className="flex flex-col items-end min-w-0 text-right"
         >
-          <div className="whitespace-nowrap text-[11px] font-light tracking-[clamp(0.1em,1.4vw,0.22em)] text-gray-400 [font-variant-numeric:tabular-nums] sm:text-xs md:text-sm">
+          {/* <div className="whitespace-nowrap text-[11px] font-light tracking-[clamp(0.1em,1.4vw,0.22em)] text-gray-400 [font-variant-numeric:tabular-nums] sm:text-xs md:text-sm">
             <ClockDigit value={time.h} />
             <BlinkingSeparator />
             <ClockDigit value={time.m} />
             <BlinkingSeparator delay={0.12} />
             <ClockDigit value={time.s} />
-          </div>
+          </div> */}
 
           <motion.div
             whileHover={{ scale: 1.03, borderColor: "rgba(64,117,247,0.35)" }}
