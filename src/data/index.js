@@ -12,8 +12,8 @@ import ArtisticallyCartPage from "../images/artistically/cart-page.png";
 import ArtisticallyAppMockup from "../images/artistically/mockup-2.png";
 
 import FoodBlogCover from "../images/blogs/food-blog.jpg";
-import MountainBlogCover from "../images/blogs/mountain-blog.jpg";
-import MinimalismBlogCover from "../images/blogs/minimalism-blog.jpg";
+import MountainBlogCover from "../images/blogs/mountain-blog.webp";
+import MinimalismBlogCover from "../images/blogs/minimalism-blog.webp";
 
 export const projects = [
   {
@@ -40,19 +40,19 @@ export const projects = [
       ],
     },
     code: {
-      why: "React Native was chosen over Flutter for its JavaScript ecosystem alignment. The recommendation logic is shared with a web dashboard via a monorepo setup. FastAPI on the backend because Python's ML library support (scikit-learn, spotipy) is unmatched and FastAPI's async handlers handle concurrent playlist requests without blocking.",
+      why: "React Native was chosen over Flutter for its JavaScript ecosystem alignment. The recommendation logic is shared with a web dashboard via a monorepo setup. FastAPI on the backend because Python's ML library support is unmatched and FastAPI's async handlers handle concurrent playlist requests without blocking.",
       architecture: "The system is split into three services: an Ingestion Service that captures listening events and context signals, a Recommendation Engine running a hybrid collaborative + content-based model, and a Delivery Layer that caches results in Redis for < 200ms response times on repeated requests.",
       techChoices: [
         { tech: "FastAPI", reason: "Async-first, Pydantic validation out of the box, auto-generated OpenAPI docs. Deployed 3× faster than a Django equivalent in our prototype." },
         { tech: "PostgreSQL + Redis", reason: "Postgres for durable user and listening history. Redis for ephemeral playlist cache, TTL of 30 min per session context. No stale recommendations." },
         { tech: "React Native + Expo", reason: "Expo's managed workflow eliminated 80% of native config. Over-the-air updates meant we could push recommendation model improvements without an App Store review cycle." },
-        { tech: "Spotipy + Spotify API", reason: "Full access to audio features (tempo, valence, energy, danceability) per track which forms the actual numerical backbone of the recommendation model." },
+        { tech: "Spotify API", reason: "Full access to audio features (tempo, valence, energy, danceability) per track which forms the actual numerical backbone of the recommendation model." },
       ],
       challenges: [
         { title: "Cold start problem", desc: "New users have no listening history. Solved with a 3-question onboarding flow that maps answers to a seed vector, letting the model start with a reasonable prior." },
         { title: "Latency at scale", desc: "Playlist generation on first request hit 800ms. Redis caching of pre-computed user vectors dropped this to 180ms for 90% of requests." },
       ],
-      stack: ["React Native", "Expo", "FastAPI", "PostgreSQL", "Redis", "Python", "Spotipy"],
+      stack: ["React Native", "FastAPI", "PostgreSQL", "Redis"],
     },
   },
   {
@@ -60,16 +60,16 @@ export const projects = [
     title: "Ink Rider",
     subtitle: "Content Publishing Platform",
     category: "Web",
-    service: "React + Node + MongoDB",
+    service: "React + Express + MongoDB",
     year: "2024",
     github: "",
     image: InkRiderAppMockup,
-    intro: "A content publishing and discovery platform built for writers who want to own their audience. Ink Rider combines the editorial feel of Medium with the community energy of Reddit without the algorithmic noise.",
+    intro: "The ultimate writing and publishing platform designed to elevate your creativity and reading experience.",
     design: {
       problem: "Most content platforms optimize for engagement at the cost of the writer. Algorithms bury niche content. Monetization is opaque. Writers don't know who actually read their work or why it resonated.",
-      solution: "Ink Rider gives writers a 'Reader Map' which provides a visual breakdown of who read their post, how far they scrolled, and what they highlighted. The design language is deliberately editorial: wide margins, generous line-height, serif display type. Reading here should feel like a magazine.",
+      solution: "Ink Rider is a next-generation publishing platform that connects writers and readers through creativity, personalization, and meaningful engagement. Writers can craft content using powerful editing tools, participate in competitions to gain recognition, and share their perspectives on trending topics requested by readers. Readers discover content tailored to their interests, enjoy quick and engaging reads, and interact directly with writers to explore diverse viewpoints on the topics that matter most to them.",
       uxDecisions: [
-        { title: "Progressive disclosure editor", desc: "The write page starts completely blank, no toolbars, no formatting options. They appear only when text is selected. Writing first, formatting second." },
+        { title: "Rich Text Editor", desc: "Inspired by Notion, the platform features a rich text editor with custom styling options." },
         { title: "Highlight-to-comment", desc: "Inline comments live next to the paragraph they reference, not in a separate thread. Readers annotate in context, writers see exactly what landed." },
         { title: "Genre tagging as personality", desc: "Tags aren't metadata, they're displayed as large pills with custom color coding per genre, making a post's identity immediately legible before you read a word." },
       ],
@@ -105,34 +105,73 @@ export const projects = [
     image: ArtisticallyAppMockup,
     intro: "A modern art e-commerce platform for discovering, exploring, and purchasing original artwork. Artistically connects collectors with emerging artists, providing a curated experience that emphasizes the story behind each piece.",
     design: {
-      problem: "Bank fraud dashboards are designed for auditors, not operators. By the time a fraud analyst spots a pattern, the damage is done. The UI needed to surface risk at the transaction level, in real time, with enough context to act and not just report.",
-      solution: "A live transaction feed with a heat-map overlay showing geo-velocity violations. Cards animate in as transactions arrive. Red glow pulses on flagged transactions. The design system is deliberately high-contrast, this is a tool used in bright, noisy environments.",
+      problem: "Most online art marketplaces prioritize transactions over discovery, making it difficult for emerging artists to showcase their work and for collectors to find pieces that resonate with their personal taste. The challenge was to create an experience that felt more like exploring a curated gallery than browsing a traditional e-commerce store.",
+
+      solution: "Artistically combines immersive artwork presentation with seamless shopping functionality. Large visual previews, clean layouts, and thoughtful storytelling help users connect with artists and their work before making a purchase. The platform balances aesthetics with usability to encourage exploration and discovery.",
+
       uxDecisions: [
-        { title: "Traffic light risk scoring", desc: "Green / Amber / Red risk badges on every transaction card. Operators pattern-match visually in < 1 second without reading numbers." },
-        { title: "Map-first anomaly view", desc: "When a card is used 400km from its last transaction in 20 minutes, the map view shows both pins with a red line between them. Spatial intuition beats raw velocity numbers." },
-        { title: "One-click freeze", desc: "Flagged transactions have a single 'Freeze Card' button. No confirmation dialogs. Speed is the product every second costs money." },
+        {
+          title: "Artwork-first browsing",
+          desc: "Minimal UI chrome and large image previews keep the focus on the artwork, allowing users to experience pieces without distractions."
+        },
+        {
+          title: "Artist storytelling",
+          desc: "Each artwork includes artist information, inspiration, and creative background to help collectors build a deeper connection with the piece."
+        },
+        {
+          title: "Streamlined purchase journey",
+          desc: "From discovery to checkout, the buying process is simplified to reduce friction while maintaining a premium gallery-like experience."
+        }
       ],
+
       screens: [
-        { label: "Search", image: ArtisticallySearchPage },
-        { label: "Product", image: ArtisticallyProductPage },
-        { label: "Cart", image: ArtisticallyCartPage },
-      ],
-    },
+        { label: "Discover", image: ArtisticallySearchPage },
+        { label: "Artwork Details", image: ArtisticallyProductPage },
+        { label: "Cart & Checkout", image: ArtisticallyCartPage }
+      ]
+      },
     code: {
-      why: "Flask was chosen over FastAPI here because the team had an existing ML pipeline in scikit-learn and Flask's lightweight footprint let us embed the model directly in the API process without microservice overhead. Pandas for transaction aggregation because the feature engineering (rolling windows, velocity calculations) maps cleanly to DataFrame operations.",
-      architecture: "Plugin architecture with a thin client-side SDK that intercepts ATM software API calls and POSTs transaction data to the FraudGuard scoring endpoint. The Flask API runs the geo-velocity model synchronously, P99 latency is 40ms, well within the 500ms ATM timeout window.",
+      why: "Next.js was selected to deliver fast page loads, SEO-friendly product pages, and a smooth user experience for artwork discovery. Server-side rendering helps artwork and artist pages rank better in search engines while maintaining excellent performance.",
+
+      architecture: "The application follows a component-driven architecture with reusable UI elements and centralized state management. Product, artist, and cart data are fetched efficiently to ensure responsive navigation and a seamless shopping experience across devices.",
+
       techChoices: [
-        { tech: "Flask + Gunicorn", reason: "Synchronous model inference doesn't benefit from async I/O. Flask's simplicity let us focus on the scoring logic. Gunicorn with 4 workers handles ~200 req/s on a single t3.medium." },
-        { tech: "Pandas", reason: "Feature engineering requires rolling time windows across transaction history. Pandas vectorized operations run 50× faster than equivalent Python loops on 10k-row transaction tables." },
-        { tech: "SQLite → PostgreSQL", reason: "Started with SQLite for prototyping (zero config). Migrated to Postgres when the pilot bank required ACID compliance and concurrent write support for multi-ATM networks." },
-        { tech: "React + Recharts", reason: "The dashboard needed live-updating charts. Recharts' declarative API made it easy to stream new data points into time-series charts without re-rendering the entire chart." },
+        {
+          tech: "Next.js",
+          reason: "Provides server-side rendering, image optimization, and routing out of the box, making it ideal for content-rich e-commerce experiences."
+        },
+        {
+          tech: "React",
+          reason: "Enabled the creation of reusable components and interactive user interfaces while keeping the codebase maintainable."
+        },
+        {
+          tech: "Tailwind CSS",
+          reason: "Accelerated UI development and allowed precise control over the visual design while maintaining consistency across pages."
+        },
+        {
+          tech: "Prisma",
+          reason: "Simplified database access and management, providing type-safe queries and migrations for the underlying database."
+        }
       ],
+
       challenges: [
-        { title: "Geo-velocity false positives", desc: "Airport transactions triggered velocity alerts constantly. Added a 'known airport' geofence list, transactions within 5km of major airports get a velocity exception window of 4h." },
-        { title: "Latency SLA", desc: "The ATM protocol times out at 500ms. Flask + model inference was hitting 220ms at P99. Moved model loading to module-level (not per-request) and added Gunicorn pre-fork dropped to 38ms P99." },
+        {
+        title: "High-quality artwork presentation",
+        desc: "Artwork images needed to look sharp without negatively impacting performance. Image optimization, lazy loading, and responsive sizing were implemented to balance quality and speed."
+        },
+        {
+        title: "Product discovery experience",
+        desc: "Large art catalogs can feel overwhelming. Filtering, categorization, and search functionality were designed to help users quickly find artwork matching their interests."
+        }
       ],
-      stack: ["React", "Flask", "Pandas", "scikit-learn", "PostgreSQL", "Recharts", "Python"],
-    },
+
+      stack: [
+        "Next.js",
+        "React",
+        "Tailwind CSS",
+        "Prisma",
+      ]
+    }
   },
 ];
 
@@ -167,18 +206,18 @@ export const blogs = [
 ];
 
 export const photos = [
-  { id: 1, year: "2025", image: "/gallery/image-1.jpg", alt: "Winter road" },
-  { id: 2, year: "2024", image: "/gallery/image-2.jpg", alt: "Mountain landscape" },
-  { id: 3, year: "2024", image: "/gallery/image-3.jpg", alt: "Sunset mountains" },
-  { id: 4, year: "2025", image: "/gallery/image-4.jpg", alt: "Autumn trees" },
-  { id: 5, year: "2023", image: "/gallery/image-5.jpg", alt: "Travel landscape" },
-  { id: 6, year: "2023", image: "/gallery/image-6.jpg", alt: "Night sky" },
-  { id: 7, year: "2025", image: "/gallery/image-7.jpg", alt: "Night sky" },
-  { id: 8, year: "2023", image: "/gallery/image-8.jpg", alt: "Night sky" },
-  { id: 9, year: "2023", image: "/gallery/image-9.jpg", alt: "Night sky" },
-  { id: 10, year: "2026", image: "/gallery/image-10.jpg", alt: "Night sky" },
-  { id: 11, year: "2026", image: "/gallery/image-11.jpg", alt: "Night sky" },
-  { id: 12, year: "2023", image: "/gallery/image-12.jpg", alt: "Night sky" },
+  { id: 1, year: "2025", image: "/gallery/image-1.jpg", alt: "Architectural Mania" },
+  { id: 2, year: "2024", image: "/gallery/image-2.jpg", alt: "Architectural Mania" },
+  { id: 3, year: "2024", image: "/gallery/image-3.jpg", alt: "Architectural Mania" },
+  { id: 4, year: "2025", image: "/gallery/image-4.jpg", alt: "Beach" },
+  { id: 5, year: "2023", image: "/gallery/image-5.jpg", alt: "Old Skool Bike" },
+  { id: 6, year: "2023", image: "/gallery/image-6.jpg", alt: "Night Life" },
+  { id: 7, year: "2025", image: "/gallery/image-7.jpg", alt: "Phonebooth" },
+  { id: 8, year: "2023", image: "/gallery/image-8.jpg", alt: "Monument" },
+  { id: 9, year: "2023", image: "/gallery/image-9.jpg", alt: "Cruise" },
+  { id: 10, year: "2026", image: "/gallery/image-10.jpg", alt: "Skateboard" },
+  { id: 11, year: "2026", image: "/gallery/image-11.jpg", alt: "Evening sky" },
+  { id: 12, year: "2023", image: "/gallery/image-12.jpg", alt: "Gurudwara" },
 ];
 
 export const experience = [

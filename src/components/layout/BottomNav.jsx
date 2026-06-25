@@ -187,7 +187,7 @@ function SettingsContent({ onClose, onBack, showBack = false }) {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           {showBack && (
             <button
@@ -213,7 +213,7 @@ function SettingsContent({ onClose, onBack, showBack = false }) {
       </div>
 
       {settings.map(({ label, icon, value, setValue }) => (
-        <div key={label} className="mb-4 flex items-center justify-between">
+        <div key={label} className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 text-sm text-[#111] dark:text-[#f1f1f1]">
             {icon}
             <span>{label}</span>
@@ -222,8 +222,8 @@ function SettingsContent({ onClose, onBack, showBack = false }) {
         </div>
       ))}
 
-      <div className="border-t border-black/10 pt-3 dark:border-white/10">
-        <p className="text-xs text-[#999] dark:text-[#666]">Ronit Khatri - Portfolio v1.0</p>
+      <div className="pt-3 border-t border-black/10 dark:border-white/10">
+        <p className="text-xs text-[#999] dark:text-[#666]">Ronit Khatri - Portfolio</p>
       </div>
     </div>
   );
@@ -236,9 +236,9 @@ function SettingsPanel({ onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 10, scale: 0.97 }}
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
-      className="mb-3 w-60 pointer-events-auto"
+      className="mb-3 pointer-events-auto w-60"
     >
-      <NavSurface className="rounded-2xl p-4">
+      <NavSurface className="p-4 rounded-2xl">
         <SettingsContent onClose={onClose} />
       </NavSurface>
     </motion.div>
@@ -890,8 +890,8 @@ export default function BottomNav({ activePage, onNavigate }) {
               >
                 <span className="shrink-0 font-mono text-sm text-[#4075F7]">$</span>
 
-                <div className="relative flex flex-1 items-center overflow-hidden">
-                  <span aria-hidden="true" className="pointer-events-none absolute inset-0 flex select-none items-center whitespace-pre font-mono text-sm text-black/15 dark:text-white/20">
+                <div className="relative flex items-center flex-1 overflow-hidden">
+                  <span aria-hidden="true" className="absolute inset-0 flex items-center font-mono text-sm whitespace-pre pointer-events-none select-none text-black/15 dark:text-white/20">
                     {inputVal}
                     {ghostSuffix}
                   </span>

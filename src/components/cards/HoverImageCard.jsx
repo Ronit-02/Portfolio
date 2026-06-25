@@ -80,7 +80,7 @@ export default function HoverImageCard({
   return (
     <>
       <div
-        className="group/image relative mb-4 cursor-none overflow-hidden rounded-xs bg-gray-100 dark:bg-gray-800"
+        className="relative mb-4 overflow-hidden bg-gray-100 group/image cursor-none rounded-xs dark:bg-gray-800"
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -95,7 +95,7 @@ export default function HoverImageCard({
           loading="lazy"
         />
 
-        <div className="absolute inset-0 bg-black/0 transition-colors duration-500 ease-out group-hover/image:bg-black/15" />
+        <div className="absolute inset-0 transition-colors duration-500 ease-out bg-black/0 group-hover/image:bg-black/15" />
       </div>
 
       {cursor}

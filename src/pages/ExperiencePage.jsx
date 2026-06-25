@@ -736,7 +736,7 @@ export default function ExperiencePage() {
   const showRoad = layoutReady && pathD;
 
   return (
-    <SectionWrapper>
+    <SectionWrapper className="pb-60">
       <SectionTitle accent="My Story" rest="Unfolds" />
 
       <motion.div

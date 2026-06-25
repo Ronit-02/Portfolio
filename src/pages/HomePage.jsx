@@ -4,10 +4,10 @@ import SectionWrapper from "../components/common/SectionWrapper";
 import { XIcon, InstagramIcon, LinkedInIcon, BehanceIcon } from "../icons";
 
 const SOCIALS = [
-  { label: "X", href: "https://x.com/khatri_ronit1", Icon: XIcon },
   { label: "Instagram", href: "https://www.instagram.com/ronitxx9/", Icon: InstagramIcon },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/ronit-khatri/", Icon: LinkedInIcon },
+  { label: "X", href: "https://x.com/khatri_ronit1", Icon: XIcon },
   { label: "Behance", href: "https://www.behance.net/ronitkhatri", Icon: BehanceIcon },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/ronit-khatri/", Icon: LinkedInIcon },
 ];
 
 const SOCIAL_POSITIONS = [
@@ -72,9 +72,7 @@ function LiveTicker() {
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
 
   return (
-    <div
-      className="w-full max-w-full min-w-0 overflow-hidden rounded-2xl border border-[#4075F7]/[0.12] bg-[#4075F7]/[0.06] py-3"
-    >
+    <div className="w-full max-w-full min-w-0 overflow-hidden rounded-2xl border border-[#4075F7]/[0.12] bg-[#4075F7]/[0.06] py-3">
       <motion.div
         className="flex w-max max-w-none items-center gap-8 whitespace-nowrap [will-change:transform] sm:gap-12"
         animate={{ x: ["0%", "-50%"] }}
@@ -85,9 +83,7 @@ function LiveTicker() {
             key={`${item.label}-${i}`}
             className="flex items-center flex-shrink-0 gap-2 px-2 text-xs sm:text-sm"
           >
-            <span
-              className="text-[10px] font-bold uppercase tracking-wider text-[#4075F7] sm:text-xs"
-            >
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#4075F7] sm:text-xs">
               {item.label}
             </span>
             <span className="text-gray-400 dark:text-gray-500">-</span>
@@ -119,12 +115,18 @@ function AnimatedName() {
     }),
   };
 
+  const baseLetterClass =
+    "inline-block shrink-0 origin-bottom -ml-[0.065em] first:ml-0 font-medium leading-[0.88] md:-ml-[0.045em] md:text-[clamp(2.75rem,15.5vw,10.5rem)] md:leading-[0.95]";
+
+  const firstNameClass = `${baseLetterClass} text-[clamp(5.15rem,27vw,10.5rem)] text-[#4075F7]`;
+  const lastNameClass = `${baseLetterClass} text-[clamp(4.85rem,24.5vw,10.5rem)] text-black dark:text-white`;
+
   return (
     <div
-      className="w-full max-w-full min-w-0 overflow-x-clip text-center leading-[0.92] [perspective:600px]"
+      className="w-full max-w-full min-w-0 overflow-hidden text-center leading-[0.84] [perspective:600px] md:leading-[0.92]"
       aria-label="Ronit Khatri"
     >
-      <div className="flex items-end justify-center max-w-full min-w-0 overflow-x-clip">
+      <div className="flex w-full items-end justify-center overflow-hidden pr-[0.065em]">
         {FIRST.map((ch, i) => (
           <motion.span
             key={`f-${i}`}
@@ -132,7 +134,7 @@ function AnimatedName() {
             variants={letterVariants}
             initial="hidden"
             animate="visible"
-            className="inline-block shrink origin-bottom text-[clamp(2.75rem,15.5vw,10.5rem)] font-medium leading-[0.95] tracking-[-0.045em] text-[#4075F7]"
+            className={firstNameClass}
             aria-hidden="true"
           >
             {ch}
@@ -140,7 +142,7 @@ function AnimatedName() {
         ))}
       </div>
 
-      <div className="flex items-end justify-center max-w-full min-w-0 overflow-x-clip">
+      <div className="flex w-full items-end justify-center overflow-hidden pr-[0.065em]">
         {LAST.map((ch, i) => (
           <motion.span
             key={`l-${i}`}
@@ -148,7 +150,7 @@ function AnimatedName() {
             variants={letterVariants}
             initial="hidden"
             animate="visible"
-            className="inline-block shrink origin-bottom text-[clamp(2.75rem,15.5vw,10.5rem)] font-medium leading-[0.95] tracking-[-0.045em] text-black dark:text-white"
+            className={lastNameClass}
             aria-hidden="true"
           >
             {ch}
@@ -161,7 +163,7 @@ function AnimatedName() {
 
 function FloatingSocials() {
   return (
-    <div className="flex justify-center gap-3 mt-6 sm:gap-4 md:mt-0 md:block md:absolute md:inset-0 md:pointer-events-none md:z-10">
+    <div className="flex justify-center gap-5 mt-7 md:pointer-events-none md:absolute md:inset-0 md:z-10 md:mt-0 md:block">
       {SOCIALS.map(({ label, href, Icon }, i) => (
         <motion.div
           key={label}
@@ -175,8 +177,8 @@ function FloatingSocials() {
           }}
           className={`
             ${SOCIAL_POSITIONS[i]}
-            relative md:absolute pointer-events-auto
-            w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16
+            pointer-events-auto relative
+            h-16 w-16 md:absolute md:h-14 md:w-14 lg:h-16 lg:w-16
           `}
         >
           <motion.a
@@ -197,7 +199,7 @@ function FloatingSocials() {
               damping: 18,
               mass: 0.5,
             }}
-            className="flex items-center justify-center w-full h-full text-gray-600 transition-colors duration-75 border border-gray-300 rounded-full dark:border-gray-700 dark:text-gray-300 bg-white/70 dark:bg-[#0f0f0f] backdrop-blur-sm hover:text-blue-500"
+            className="flex h-full w-full items-center justify-center rounded-full border border-gray-300 bg-white/70 text-gray-600 backdrop-blur-sm transition-colors duration-75 hover:text-blue-500 dark:border-gray-700 dark:bg-[#0f0f0f] dark:text-gray-300"
           >
             <Icon />
           </motion.a>
@@ -212,26 +214,26 @@ const spring = { type: "spring", stiffness: 280, damping: 22 };
 export default function HomePage() {
   return (
     <SectionWrapper>
-      <div
-        className="relative w-full max-w-full min-w-0 overflow-x-clip [contain:paint]"
-      >
-        <div className="flex flex-col items-center w-full max-w-full min-w-0 gap-6 sm:gap-8 md:gap-10 overflow-x-clip">
+      <div className="relative w-full max-w-full min-w-0 overflow-hidden">
+        <div className="flex flex-col items-center w-full max-w-full min-w-0 gap-6 overflow-hidden sm:gap-8 md:gap-10">
           {/* Subtitle row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ ...spring, delay: 0.05 }}
-            className="flex items-center w-full max-w-3xl min-w-0 gap-3 px-2 sm:gap-6"
+            className="flex items-center justify-center w-full max-w-3xl min-w-0 gap-3 px-2 sm:gap-6"
           >
-            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-700" />
-            <p className="max-w-[72%] sm:max-w-none text-center text-xs sm:text-sm md:text-base text-gray-500 dark:text-gray-400 leading-snug sm:whitespace-nowrap">
+            <div className="flex-1 hidden h-px bg-gray-300 dark:bg-gray-700 sm:block" />
+
+            <p className="max-w-[18rem] text-center text-base leading-tight text-gray-900 dark:text-gray-200 sm:max-w-none sm:whitespace-nowrap sm:text-sm md:text-base md:text-gray-500 md:dark:text-gray-400">
               A versatile creator specializing in Design and Development
             </p>
-            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-700" />
+
+            <div className="flex-1 hidden h-px bg-gray-300 dark:bg-gray-700 sm:block" />
           </motion.div>
 
           {/* Animated hero name with floating social icons */}
-          <div className="relative w-full min-w-0 py-4 mx-auto max-w-7xl sm:py-8 md:py-6 overflow-x-clip">
+          <div className="relative w-full max-w-full min-w-0 py-5 overflow-hidden md:mx-auto md:max-w-7xl md:py-6">
             <AnimatedName />
             <FloatingSocials />
           </div>
@@ -241,7 +243,7 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.3 }}
-            className="w-full max-w-full min-w-0 overflow-x-clip"
+            className="w-full max-w-full min-w-0 overflow-hidden"
           >
             <LiveTicker />
           </motion.div>
@@ -251,7 +253,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...spring, delay: 1.4 }}
-            className="grid w-full max-w-full min-w-0 grid-cols-2 pt-4 pb-2 sm:grid-cols-4 gap-x-4 gap-y-6 sm:gap-6 sm:pt-6"
+            className="grid w-full max-w-full min-w-0 grid-cols-2 pt-4 pb-2 gap-x-4 gap-y-6 sm:grid-cols-4 sm:gap-6 sm:pt-6"
           >
             {STATS.map((stat, i) => (
               <Counter
