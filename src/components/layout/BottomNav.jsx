@@ -124,7 +124,7 @@ function CommandHint({ isCompact, onHintClick, onDismiss }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 8, scale: 0.96 }}
       transition={{ type: "spring", stiffness: 320, damping: 26 }}
-      className="mb-2 flex max-w-[calc(100vw-32px)] cursor-pointer select-none items-center gap-2.5 rounded-full border border-black/10 bg-white py-2 pl-3 pr-2 text-xs text-[#111] shadow-[0_8px_28px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-[#1c1c1e] dark:text-[#f1f1f1]"
+      className="pointer-events-auto mb-2 flex max-w-[calc(100vw-32px)] cursor-pointer select-none items-center gap-2.5 rounded-full border border-black/10 bg-white py-2 pl-3 pr-2 text-xs text-[#111] shadow-[0_8px_28px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-[#1c1c1e] dark:text-[#f1f1f1]"
       onClick={onHintClick}
       role="button"
       tabIndex={0}

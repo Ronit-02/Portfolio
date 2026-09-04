@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BrowserRouter,
@@ -13,6 +13,7 @@ import {
 import { ThemeProvider } from "../context/ThemeContext";
 import TopNav from "../components/layout/TopNav";
 import BottomNav from "../components/layout/BottomNav";
+import PortfolioLayerTransition from "../components/layout/PortfolioLayerTransition";
 
 import AboutPage from "../pages/AboutPage";
 import BlogDetailPage from "../pages/BlogDetailPage";
@@ -20,6 +21,7 @@ import BlogPage from "../pages/BlogPage";
 import ContactPage from "../pages/ContactPage";
 import ExperiencePage from "../pages/ExperiencePage";
 import HomePage from "../pages/HomePage";
+import LifeHomePage from "../pages/LifeHomePage";
 import PhotosPage from "../pages/PhotosPage";
 import ProjectDetailPage from "../pages/ProjectDetailPage";
 import ProjectsPage from "../pages/ProjectsPage";
@@ -47,13 +49,7 @@ const pageRoutes = {
 function AppInner() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const activePage = useMemo(() => {
-    const path = location.pathname;
-    if (path.startsWith("/projects")) return "projects";
-    if (path.startsWith("/blog")) return "blog";
-    return routeToPage[path] || "home";
-  }, [location.pathname]);
+  const [portfolioTransition, setPortfolioTransition] = useState(null);
 
   const handleNavigate = (page) => {
     navigate(pageRoutes[page] || "/");
@@ -70,37 +66,108 @@ function AppInner() {
     window.scrollTo({ top: 0 });
   };
 
+  const handleSwitchPortfolio = () => {
+    if (portfolioTransition) return;
+
+    const destination = location.pathname === "/life" ? "/" : "/life";
+    const transitionKey = Date.now();
+
+    setPortfolioTransition({
+      destination,
+      originLocation: {
+        ...location,
+        key: `portfolio-origin-${transitionKey}`,
+      },
+      destinationLocation: {
+        ...location,
+        pathname: destination,
+        search: "",
+        hash: "",
+        state: null,
+        key: `portfolio-destination-${transitionKey}`,
+      },
+    });
+  };
+
+  const completePortfolioTransition = () => {
+    if (!portfolioTransition) return;
+
+    navigate(portfolioTransition.destination);
+    window.scrollTo({ top: 0 });
+
+    window.setTimeout(() => {
+      setPortfolioTransition(null);
+    }, 190);
+  };
+
+  const renderPortfolio = (routeLocation, transitionLayer = false) => {
+    const isLifeSide = routeLocation.pathname === "/life";
+    const frameActivePage = (() => {
+      const path = routeLocation.pathname;
+      if (path.startsWith("/projects")) return "projects";
+      if (path.startsWith("/blog")) return "blog";
+      return routeToPage[path] || "home";
+    })();
+
+    return (
+      <div className="min-h-screen bg-white font-satoshi transition-colors duration-300 dark:bg-[#0f0f0f]">
+        <TopNav
+          portfolioSide={isLifeSide ? "life" : "work"}
+          onSwitchPortfolio={transitionLayer ? undefined : handleSwitchPortfolio}
+          switchDisabled={transitionLayer || Boolean(portfolioTransition)}
+        />
+
+        <main className="w-full">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={routeLocation.pathname}
+              initial={transitionLayer ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+            >
+              <Routes location={routeLocation}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/life" element={<LifeHomePage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/projects" element={<ProjectsPage onSelectProject={handleSelectProject} />} />
+                <Route path="/projects/:projectId" element={<ProjectDetailRoute />} />
+                <Route path="/experience" element={<ExperiencePage />} />
+                <Route path="/blog" element={<BlogPage onSelectBlog={handleSelectBlog} />} />
+                <Route path="/blog/:blogId" element={<BlogDetailRoute />} />
+                <Route path="/photos" element={<PhotosPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </motion.div>
+          </AnimatePresence>
+        </main>
+
+        {!isLifeSide && (
+          <BottomNav activePage={frameActivePage} onNavigate={handleNavigate} />
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-white font-satoshi transition-colors duration-300 dark:bg-[#0f0f0f]">
-      <TopNav />
+    <>
+      {renderPortfolio(
+        portfolioTransition?.destinationLocation || location,
+        Boolean(portfolioTransition)
+      )}
 
-      <main className="w-full">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+      <AnimatePresence>
+        {portfolioTransition && (
+          <PortfolioLayerTransition
+            key={portfolioTransition.originLocation.key}
+            onComplete={completePortfolioTransition}
           >
-            <Routes location={location}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/projects" element={<ProjectsPage onSelectProject={handleSelectProject} />} />
-              <Route path="/projects/:projectId" element={<ProjectDetailRoute />} />
-              <Route path="/experience" element={<ExperiencePage />} />
-              <Route path="/blog" element={<BlogPage onSelectBlog={handleSelectBlog} />} />
-              <Route path="/blog/:blogId" element={<BlogDetailRoute />} />
-              <Route path="/photos" element={<PhotosPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </motion.div>
-        </AnimatePresence>
-      </main>
-
-      <BottomNav activePage={activePage} onNavigate={handleNavigate} />
-    </div>
+            {renderPortfolio(portfolioTransition.originLocation, true)}
+          </PortfolioLayerTransition>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 

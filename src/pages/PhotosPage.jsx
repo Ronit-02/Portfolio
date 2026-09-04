@@ -124,7 +124,7 @@ const PhotoCard = memo(function PhotoCard({
             src={photo.image}
             alt={photo.alt}
             loading={shouldLoadEarly ? "eager" : "lazy"}
-            fetchPriority={shouldLoadEarly ? "high" : "low"}
+            fetchpriority={shouldLoadEarly ? "high" : "low"}
             decoding="async"
             sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
             onLoad={() => setIsLoaded(true)}

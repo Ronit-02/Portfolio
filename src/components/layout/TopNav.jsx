@@ -1,49 +1,23 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { ChevronDown } from "../../icons";
 
-function BlinkingSeparator({ delay = 0 }) {
-  return (
-    <motion.span
-      className="mx-0.5 text-[#4075F7] sm:mx-1"
-      animate={{ opacity: [0.25, 1, 0.25] }}
-      transition={{ duration: 1, repeat: Infinity, ease: "easeInOut", delay }}
-    >
-      :
-    </motion.span>
-  );
-}
+export default function TopNav({
+  portfolioSide = "work",
+  onSwitchPortfolio,
+  switchDisabled = false,
+}) {
+  const isLifeSide = portfolioSide === "life";
+  const switchLabel = isLifeSide
+    ? "Return to work portfolio"
+    : "Open personal portfolio";
 
-function ClockDigit({ value }) {
-  return (
-    <motion.span
-      key={value}
-      initial={{ opacity: 0.45, y: -2 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.18 }}
-    >
-      {value}
-    </motion.span>
-  );
-}
+  const handlePullEnd = (_, info) => {
+    if (switchDisabled) return;
 
-export default function TopNav() {
-  const [time, setTime] = useState({ h: "00", m: "00", s: "00" });
-
-  useEffect(() => {
-    const tick = () => {
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2, "0");
-      const m = String(now.getMinutes()).padStart(2, "0");
-      const s = String(now.getSeconds()).padStart(2, "0");
-
-      setTime({ h, m, s });
-    };
-
-    tick();
-    const id = setInterval(tick, 1000);
-
-    return () => clearInterval(id);
-  }, []);
+    if (info.offset.y > 10 || info.velocity.y > 140) {
+      onSwitchPortfolio?.();
+    }
+  };
 
   return (
     <motion.div
@@ -52,7 +26,7 @@ export default function TopNav() {
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="sticky top-0 z-40 w-full overflow-x-hidden border-b border-gray-100 bg-white dark:border-gray-800 dark:bg-[#0f0f0f]"
     >
-      <header className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4 sm:px-6 sm:py-2.5 md:px-12 md:py-4">
+      <header className="relative mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4 sm:px-6 sm:py-2.5 md:px-12 md:py-4">
         <motion.div
           initial="rest"
           animate="rest"
@@ -87,23 +61,42 @@ export default function TopNav() {
           />
         </motion.div>
 
-        <motion.div
-          whileHover={{ y: -1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 24 }}
-          className="flex flex-col items-end min-w-0 text-right"
-        >
-          {/* <div className="whitespace-nowrap text-[11px] font-light tracking-[clamp(0.1em,1.4vw,0.22em)] text-gray-400 [font-variant-numeric:tabular-nums] sm:text-xs md:text-sm">
-            <ClockDigit value={time.h} />
-            <BlinkingSeparator />
-            <ClockDigit value={time.m} />
-            <BlinkingSeparator delay={0.12} />
-            <ClockDigit value={time.s} />
-          </div> */}
+        <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2">
+          <motion.button
+            type="button"
+            onClick={onSwitchPortfolio}
+            onDragEnd={handlePullEnd}
+            disabled={switchDisabled}
+            aria-label={switchLabel}
+            title={switchLabel}
+            drag={switchDisabled ? false : "y"}
+            dragConstraints={{ top: 0, bottom: 18 }}
+            dragElastic={0.24}
+            dragMomentum={false}
+            dragSnapToOrigin
+            whileHover={switchDisabled ? undefined : { y: 2 }}
+            whileTap={switchDisabled ? undefined : { scale: 0.96 }}
+            whileDrag={switchDisabled ? undefined : { scale: 1.04 }}
+            transition={{ type: "spring", stiffness: 430, damping: 25 }}
+            className="group flex h-7 w-11 cursor-grab items-center justify-center rounded-b-xl border-x border-b border-gray-200 bg-white/95 text-gray-500 shadow-[0_5px_16px_rgba(18,24,38,0.07)] outline-none backdrop-blur-sm hover:border-[#4075F7]/35 hover:text-[#4075F7] focus-visible:ring-2 focus-visible:ring-[#4075F7] focus-visible:ring-offset-2 active:cursor-grabbing disabled:cursor-default disabled:opacity-60 dark:border-gray-800 dark:bg-[#0f0f0f]/95 dark:text-gray-400 dark:hover:border-[#4075F7]/45 dark:hover:text-[#7ea2ff] dark:focus-visible:ring-offset-[#0f0f0f]"
+          >
+            <motion.span
+              aria-hidden="true"
+              className="flex scale-75"
+              animate={{ y: 0 }}
+              whileHover={switchDisabled ? undefined : { y: 1.5 }}
+              transition={{ type: "spring", stiffness: 520, damping: 24 }}
+            >
+              <ChevronDown />
+            </motion.span>
+          </motion.button>
+        </div>
 
+        <div className="flex min-w-0 items-center justify-end gap-2 text-right sm:gap-3">
           <motion.div
             whileHover={{ scale: 1.03, borderColor: "rgba(64,117,247,0.35)" }}
             transition={{ type: "spring", stiffness: 420, damping: 22 }}
-            className="mt-1.5 inline-flex max-w-full items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50/80 px-2 py-1 text-gray-700 sm:mt-2 sm:gap-2 sm:px-3 dark:border-gray-800 dark:bg-white/[0.04] dark:text-gray-300"
+            className="hidden max-w-full items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50/80 px-2 py-1 text-gray-700 xs:inline-flex sm:gap-2 sm:px-3 dark:border-gray-800 dark:bg-white/[0.04] dark:text-gray-300"
           >
             <span className="relative flex h-1.5 w-1.5 shrink-0 sm:h-2 sm:w-2">
               <motion.span
@@ -118,7 +111,8 @@ export default function TopNav() {
               Delhi, India
             </span>
           </motion.div>
-        </motion.div>
+
+        </div>
       </header>
     </motion.div>
   );
