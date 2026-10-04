@@ -14,8 +14,8 @@ import { cn } from "../utils/cn";
 
 const R = 16;
 
-// Slightly narrower cards so the road can be wider without overlapping them.
-const CARD_W_PCT = 0.34;
+// Keep the cards substantial while leaving enough room for the animated road.
+const CARD_W_PCT = 0.37;
 
 
 const ROAD_GAP = 16;
@@ -61,45 +61,21 @@ const MAX_ROAD_GAP_PX = 300;
 
 const THEMES = {
   light: {
-    roadBase: "#e5e7eb",
+    roadBase: "#e6e8ec",
     roadActive: "#4075F7",
 
-    dotHalo: "rgba(64,117,247,0.1)",
+    dotHalo: "rgba(64,117,247,0.12)",
     dotInactiveFill: "#ffffff",
-    dotInactiveStroke: "#d1d5db",
-
-    cardInactiveBg: "#fafafa",
-    cardActiveBg: "rgba(64,117,247,0.03)",
-    cardInactiveBorder: "#efefef",
-    cardActiveBorder: "rgba(64,117,247,0.3)",
-
-    yearInactive: "#cccccc",
-    titleActive: "#111111",
-    titleInactive: "#bbbbbb",
-    companyInactive: "#dddddd",
-
-    accent: "#4075F7",
+    dotInactiveStroke: "#d8dce3",
   },
 
   dark: {
-    roadBase: "rgba(148,163,184,0.28)",
+    roadBase: "#3a3a3a",
     roadActive: "#60A5FA",
 
     dotHalo: "rgba(96,165,250,0.16)",
-    dotInactiveFill: "#0f172a",
-    dotInactiveStroke: "#475569",
-
-    cardInactiveBg: "rgba(15,23,42,0.72)",
-    cardActiveBg: "rgba(96,165,250,0.08)",
-    cardInactiveBorder: "rgba(148,163,184,0.18)",
-    cardActiveBorder: "rgba(96,165,250,0.42)",
-
-    yearInactive: "#64748b",
-    titleActive: "#f8fafc",
-    titleInactive: "#64748b",
-    companyInactive: "#475569",
-
-    accent: "#60A5FA",
+    dotInactiveFill: "#191919",
+    dotInactiveStroke: "#5a5a5a",
   },
 };
 
@@ -121,7 +97,9 @@ function getMobileRoadX(W) {
 }
 
 function getMobileCardInset(W) {
-  return getMobileRoadX(W) + MOBILE_CARD_ROAD_GAP;
+  const cardGap = W < 360 ? 24 : MOBILE_CARD_ROAD_GAP;
+
+  return getMobileRoadX(W) + cardGap;
 }
 
 function getMobileRightPadding(W) {
@@ -826,8 +804,16 @@ export default function ExperiencePage() {
                       cx={point.x}
                       cy={point.y}
                       r={7}
-                      fill={dotReached[index] ? theme.roadActive : "#ffffff"}
-                      stroke={dotReached[index] ? theme.roadActive : theme.roadBase}
+                      fill={
+                        dotReached[index]
+                          ? theme.roadActive
+                          : theme.dotInactiveFill
+                      }
+                      stroke={
+                        dotReached[index]
+                          ? theme.roadActive
+                          : theme.dotInactiveStroke
+                      }
                       strokeWidth="2"
                       className="transition-[fill,stroke] duration-500"
                     />
@@ -869,53 +855,88 @@ export default function ExperiencePage() {
                 animate={{ "--card-width": isCompact ? "100%" : `${CARD_W_PCT * 100}%` }}
                 transition={{ duration: 0 }}
               >
-                <motion.div
+                <motion.article
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -5 }}
                   viewport={{ once: true, margin: "-50px" }}
-                  transition={{ type: "spring", stiffness: 260, damping: 26 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 24 }}
                   className={cn(
-                    "box-border w-full [overflow-wrap:break-word] rounded-2xl border-[1.5px] transition-[border-color,background,box-shadow] duration-500",
-                    isCompact ? "px-5 py-[22px]" : "px-[30px] py-[26px]",
+                    "group relative box-border w-full overflow-hidden rounded-[1.4rem] border [overflow-wrap:break-word] transition-[border-color,background-color,box-shadow] duration-300",
+                    "bg-white shadow-[0_1px_2px_rgba(15,23,42,0.03),0_12px_36px_rgba(15,23,42,0.045)]",
+                    "hover:border-[#4075F7]/35 hover:shadow-[0_18px_48px_rgba(64,117,247,0.13)]",
+                    "dark:bg-[#202020] dark:shadow-[0_1px_2px_rgba(0,0,0,0.18),0_14px_34px_rgba(0,0,0,0.16)] dark:hover:border-blue-400/40 dark:hover:bg-[#242424] dark:hover:shadow-[0_18px_44px_rgba(0,0,0,0.24)]",
+                    isCompact ? "px-4 py-5 xs:px-5" : "px-7 py-6",
                     active
-                      ? "border-[#4075F7]/30 bg-[#4075F7]/[0.03] dark:border-[#60A5FA]/40 dark:bg-[#60A5FA]/[0.08]"
-                      : "border-[#efefef] bg-[#fafafa] dark:border-slate-400/20 dark:bg-slate-900/70"                  )}
+                      ? "border-[#4075F7]/30 bg-[#fbfcff] shadow-[0_16px_44px_rgba(64,117,247,0.11)] dark:border-blue-400/35 dark:bg-[#232830]"
+                      : "border-gray-200/80 dark:border-[#373737]"
+                  )}
                 >
-                  <p
+                  <div
+                    aria-hidden="true"
                     className={cn(
-                      "mb-2.5 font-mono text-[11px] uppercase tracking-[0.12em] transition-colors duration-500",
+                      "absolute inset-y-0 left-0 w-1 origin-bottom rounded-r-full bg-[#4075F7] transition-transform duration-500 dark:bg-blue-400",
                       active
-                        ? "text-[#4075F7] dark:text-[#60A5FA]"
-                        : "text-[#cccccc] dark:text-slate-500"
+                        ? "scale-y-100"
+                        : "scale-y-0 group-hover:scale-y-100"
                     )}
-                  >
-                    {exp.year}
-                  </p>
+                  />
+
+                  <div
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute -right-16 -top-20 h-40 w-40 rounded-full bg-[#4075F7]/[0.07] blur-2xl transition-opacity duration-500 dark:bg-blue-400/[0.08]",
+                      active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    )}
+                  />
+
+                  <div className="relative flex items-center justify-between gap-2 xs:gap-4">
+                    <time
+                      className={cn(
+                        "rounded-full border px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.12em] transition-colors duration-300",
+                        active
+                          ? "border-[#4075F7]/20 bg-[#4075F7]/[0.07] text-[#4075F7] dark:border-blue-400/25 dark:bg-blue-400/10 dark:text-blue-300"
+                          : "border-gray-200 bg-gray-50 text-gray-500 group-hover:border-[#4075F7]/20 group-hover:text-[#4075F7] dark:border-[#404040] dark:bg-[#292929] dark:text-[#aaa9a6] dark:group-hover:border-blue-400/30 dark:group-hover:text-blue-300"
+                      )}
+                    >
+                      {exp.year}
+                    </time>
+
+                    <span className="font-mono text-[10px] tracking-[0.14em] text-gray-300 dark:text-[#696866]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
 
                   <h3
                     className={cn(
-                      "mb-2 font-bold leading-tight tracking-[-0.02em] transition-colors duration-500",
-                      isCompact ? "text-[1.1rem]" : "text-xl",
-                      active
-                        ? "text-[#111] dark:text-slate-50"
-                        : "text-[#bbbbbb] dark:text-slate-500"
+                      "relative mt-6 font-bold leading-[1.08] tracking-[-0.03em] text-gray-950 transition-colors duration-300 dark:text-[#e3e2e0]",
+                      "group-hover:text-[#4075F7] dark:group-hover:text-blue-300",
+                      isCompact ? "text-[1.2rem]" : "text-[1.35rem]"
                     )}
                   >
                     {exp.title}
                   </h3>
 
-                  <p
-                    className={cn(
-                      "text-[10px] font-bold uppercase transition-colors duration-500",
-                      isCompact ? "tracking-[0.14em]" : "tracking-[0.18em]",
-                      active
-                        ? "text-[#4075F7] dark:text-[#60A5FA]"
-                        : "text-[#dddddd] dark:text-slate-600"
-                    )}
-                  >
-                    {exp.company}
-                  </p>
-                </motion.div>
+                  <div className="relative mt-3 flex items-center gap-2.5">
+                    <span
+                      className={cn(
+                        "h-1.5 w-1.5 rounded-full transition-[background-color,box-shadow] duration-300",
+                        active
+                          ? "bg-[#4075F7] shadow-[0_0_0_4px_rgba(64,117,247,0.1)] dark:bg-blue-400 dark:shadow-[0_0_0_4px_rgba(96,165,250,0.12)]"
+                          : "bg-gray-300 group-hover:bg-[#4075F7] dark:bg-gray-600 dark:group-hover:bg-blue-400"
+                      )}
+                    />
+                    <p
+                      className={cn(
+                        "text-[10px] font-bold uppercase text-gray-500 transition-colors duration-300 dark:text-[#aaa9a6]",
+                        "group-hover:text-gray-700 dark:group-hover:text-gray-200",
+                        isCompact ? "tracking-[0.14em]" : "tracking-[0.18em]"
+                      )}
+                    >
+                      {exp.company}
+                    </p>
+                  </div>
+                </motion.article>
               </motion.div>
             </motion.div>
           );

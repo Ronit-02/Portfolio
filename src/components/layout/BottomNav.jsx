@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { navItems } from "../../data";
+import { navItems, profile } from "../../data";
 import {
   AboutIcon,
   BlogIcon,
@@ -36,13 +36,11 @@ const ICON_MAP = {
   settings: SettingsIcon,
 };
 
-const RESUME_URL = "https://drive.google.com/file/d/1example/view";
 const COMMAND_HINT_STORAGE_KEY = "bottom-nav-command-hint-seen";
-const INITIAL_SUGGESTIONS = [
-  { cmd: "whoami", desc: "Who is Ronit?" },
-  { cmd: "ls projects", desc: "List all projects" },
-  { cmd: "help", desc: "Show all commands" },
-];
+const INITIAL_COMMANDS = ["whoami", "ls projects", "social", "help"];
+const INITIAL_SUGGESTIONS = INITIAL_COMMANDS.map((command) =>
+  COMMANDS_LIST.find(({ cmd }) => cmd === command)
+).filter(Boolean);
 
 const MOBILE_BREAKPOINT = 640;
 const DESKTOP_BREAKPOINT = 1024;
@@ -110,7 +108,7 @@ function BackIcon() {
 
 function NavSurface({ children, className = "" }) {
   return (
-    <div className={cn("border border-black/10 bg-white shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-[#1c1c1e]", className)}>
+    <div className={cn("border border-black/10 bg-white shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:border-[#3a3a3a] dark:bg-[#252525]", className)}>
       {children}
     </div>
   );
@@ -124,7 +122,7 @@ function CommandHint({ isCompact, onHintClick, onDismiss }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 8, scale: 0.96 }}
       transition={{ type: "spring", stiffness: 320, damping: 26 }}
-      className="pointer-events-auto mb-2 flex max-w-[calc(100vw-32px)] cursor-pointer select-none items-center gap-2.5 rounded-full border border-black/10 bg-white py-2 pl-3 pr-2 text-xs text-[#111] shadow-[0_8px_28px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-[#1c1c1e] dark:text-[#f1f1f1]"
+      className="pointer-events-auto mb-2 flex max-w-[calc(100vw-32px)] cursor-pointer select-none items-center gap-2.5 rounded-full border border-black/10 bg-white py-2 pl-3 pr-2 text-xs text-[#111] shadow-[0_8px_28px_rgba(0,0,0,0.12)] dark:border-[#3a3a3a] dark:bg-[#252525] dark:text-[#e3e2e0]"
       onClick={onHintClick}
       role="button"
       tabIndex={0}
@@ -223,7 +221,9 @@ function SettingsContent({ onClose, onBack, showBack = false }) {
       ))}
 
       <div className="pt-3 border-t border-black/10 dark:border-white/10">
-        <p className="text-xs text-[#999] dark:text-[#666]">Ronit Khatri - Portfolio</p>
+        <p className="text-xs text-[#999] dark:text-[#666]">
+          {profile.fullName} - {profile.portfolioLabel}
+        </p>
       </div>
     </div>
   );
@@ -281,7 +281,7 @@ function CompactSheet({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 12, scale: 0.98 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="mb-3 w-[min(360px,calc(100vw-32px))] pointer-events-auto sm:w-[min(420px,calc(100vw-40px))]"
+      className="pointer-events-auto mb-3 w-[min(360px,calc(100vw-24px))] sm:w-[min(420px,calc(100vw-40px))]"
     >
       <NavSurface className="overflow-hidden rounded-3xl p-2 shadow-[0_10px_34px_rgba(0,0,0,0.14)]">
         <AnimatePresence mode="wait" initial={false}>
@@ -331,14 +331,70 @@ function CompactSheet({
   );
 }
 
-function outputLineClass(t) {
-  if (t === "blue") return "text-[#4075F7]";
-  if (t === "primary") return "text-[#111] dark:text-[#f1f1f1]";
-  if (t === "muted") return "text-[#999] dark:text-[#666]";
-  return "text-transparent";
+function TerminalPrompt({ command, compact = false }) {
+  return (
+    <div className="min-w-0 truncate font-mono text-[13px] leading-5">
+      {!compact && (
+        <span className="font-semibold text-[#4075F7]">
+          {profile.firstName.toLowerCase()}@portfolio
+        </span>
+      )}
+      <span className="text-[#8b93a1] dark:text-[#747d8d]">
+        {compact ? "~ $ " : ":~$ "}
+      </span>
+      {command && (
+        <span className="font-semibold text-[#17191f] dark:text-[#f4f6fb]">
+          {command}
+        </span>
+      )}
+    </div>
+  );
 }
 
-function OutputCard({ output, onClose, width }) {
+function TerminalRow({ row, index, total }) {
+  const isLast = index === total - 1;
+
+  return (
+    <div className="grid grid-cols-[1.1rem_minmax(5rem,0.8fr)_auto_minmax(0,1.4fr)] items-start gap-x-1 py-1 font-mono text-[11px] leading-[1.55] xs:grid-cols-[1.25rem_minmax(5.75rem,0.8fr)_auto_minmax(0,1.4fr)] xs:text-[12px] sm:grid-cols-[1.25rem_minmax(7.5rem,0.75fr)_auto_minmax(0,1.5fr)] sm:text-[13px]">
+      <span
+        aria-hidden="true"
+        className="select-none text-[#a7afbd] dark:text-[#515a6b]"
+      >
+        {isLast ? "└─" : "├─"}
+      </span>
+      <span
+        className={cn(
+          "min-w-0 break-words font-semibold text-[#252932] dark:text-[#e8ebf2]",
+          row.accent === "key" && "text-[#4075F7] dark:text-[#7ea2ff]"
+        )}
+      >
+        {row.key}
+      </span>
+      <span className="select-none text-[#a7afbd] dark:text-[#515a6b]">:</span>
+      <span
+        className={cn(
+          "min-w-0 break-words font-normal text-[#5d6470] dark:text-[#aeb5c2]",
+          row.accent === "value" && "text-[#4075F7] dark:text-[#7ea2ff]"
+        )}
+      >
+        {row.value}
+      </span>
+    </div>
+  );
+}
+
+function OutputCard({ output, onClose, onRunCommand, width }) {
+  const content = output.error
+    ? {
+        title: "command error",
+        meta: "exit 127",
+        rows: [
+          { key: "error", value: `command not found: ${output.cmd}` },
+          { key: "hint", value: "run help to list available commands", accent: "value" },
+        ],
+      }
+    : OUTPUTS[output.cmd];
+
   return (
     <motion.div
       key={output.cmd + (output.error ? "e" : "")}
@@ -346,31 +402,54 @@ function OutputCard({ output, onClose, width }) {
       animate={{ opacity: 1, y: 0, width }}
       exit={{ opacity: 0, y: 8 }}
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
-      className="mb-2 max-w-[calc(100vw-24px)] pointer-events-auto rounded-2xl border border-[#4075F7]/30 bg-white px-[18px] py-3 shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:bg-[#1c1c1e]"
+      role="status"
+      aria-live="polite"
+      className="pointer-events-auto mb-2 max-w-[calc(100vw-24px)] overflow-hidden rounded-xl border border-black/15 bg-[#fbfcff] shadow-[inset_0_2px_0_rgba(64,117,247,0.85),0_10px_34px_rgba(0,0,0,0.12)] dark:border-white/[0.12] dark:bg-[#12151c] dark:shadow-[inset_0_2px_0_rgba(126,162,255,0.9),0_12px_38px_rgba(0,0,0,0.4)]"
     >
-      {output.error ? (
-        <p className="font-mono text-sm text-[#999] dark:text-[#666]">
-          bash: <span className="text-[#111] dark:text-[#f1f1f1]">{output.cmd}</span>: not found -{" "}
-          <button type="button" className="cursor-pointer border-none bg-transparent p-0 font-mono text-sm text-[#4075F7]" onClick={onClose}>
-            try help
-          </button>
-        </p>
-      ) : (
-        <>
-          <div className="mb-1.5 flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#4075F7]">{output.cmd}</p>
-            <button type="button" onClick={onClose} className="cursor-pointer border-none bg-transparent p-0 text-[#999] dark:text-[#666]" aria-label="Close command output">
-              <XClose />
-            </button>
-          </div>
+      <div className="flex items-center justify-between gap-3 border-b border-black/[0.08] px-3 py-2.5 xs:px-4 dark:border-white/[0.08]">
+        <TerminalPrompt command={output.cmd} />
+        <button
+          type="button"
+          onClick={onClose}
+          className="shrink-0 cursor-pointer border-none bg-transparent p-0 font-mono text-[11px] font-medium text-[#8b93a1] transition-colors hover:text-[#4075F7] dark:text-[#747d8d] dark:hover:text-[#7ea2ff]"
+          aria-label="Close command output"
+        >
+          [x]
+        </button>
+      </div>
 
-          {OUTPUTS[output.cmd]?.map((line, index) => (
-            <p key={`${line.v}-${index}`} className={cn("min-h-[1.4em] whitespace-pre font-mono text-sm leading-relaxed", outputLineClass(line.t))}>
-              {line.v || "\u00a0"}
-            </p>
+      <div className="max-h-[min(52vh,28rem)] overflow-y-auto px-3 py-3 scrollbar-hide xs:px-4">
+        <div className="mb-2 flex items-baseline justify-between gap-3 font-mono">
+          <h3 className="min-w-0 truncate text-[13px] font-bold text-[#252932] dark:text-[#e8ebf2]">
+            <span className="mr-1.5 text-[#4075F7] dark:text-[#7ea2ff]">//</span>
+            {content.title}
+          </h3>
+          <span className="shrink-0 text-[11px] font-normal text-[#8b93a1] dark:text-[#747d8d]">
+            {content.meta}
+          </span>
+        </div>
+
+        <div>
+          {content.rows.map((row, index) => (
+            <TerminalRow
+              key={`${row.key}-${row.value}-${index}`}
+              row={row}
+              index={index}
+              total={content.rows.length}
+            />
           ))}
-        </>
-      )}
+        </div>
+
+        {output.error && (
+          <button
+            type="button"
+            onClick={() => onRunCommand("help")}
+            className="mt-2 cursor-pointer border-none bg-transparent p-0 font-mono text-[12px] font-semibold text-[#4075F7] hover:underline dark:text-[#7ea2ff]"
+          >
+            [ run help ]
+          </button>
+        )}
+      </div>
     </motion.div>
   );
 }
@@ -384,8 +463,18 @@ function SuggestionList({ suggestions, activeIdx, onSelect, width }) {
       animate={{ opacity: 1, y: 0, width }}
       exit={{ opacity: 0, y: 6 }}
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
-      className="mb-2 max-h-60 max-w-[calc(100vw-24px)] overflow-y-auto pointer-events-auto rounded-2xl border border-[#4075F7]/20 bg-white shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:bg-[#1c1c1e]"
+      className="pointer-events-auto mb-2 max-h-60 max-w-[calc(100vw-24px)] overflow-y-auto rounded-xl border border-black/15 bg-[#fbfcff] shadow-[inset_0_2px_0_rgba(64,117,247,0.85),0_10px_34px_rgba(0,0,0,0.1)] scrollbar-hide dark:border-white/[0.12] dark:bg-[#12151c] dark:shadow-[inset_0_2px_0_rgba(126,162,255,0.9),0_12px_38px_rgba(0,0,0,0.35)]"
     >
+      <div className="sticky top-0 z-10 flex items-baseline justify-between gap-3 border-b border-black/[0.08] bg-[#fbfcff]/95 px-3 py-2 font-mono backdrop-blur-sm xs:px-4 dark:border-white/[0.08] dark:bg-[#12151c]/95">
+        <span className="text-[12px] font-bold text-[#252932] dark:text-[#e8ebf2]">
+          <span className="mr-1.5 text-[#4075F7] dark:text-[#7ea2ff]">//</span>
+          commands
+        </span>
+        <span className="text-[11px] font-normal text-[#8b93a1] dark:text-[#747d8d]">
+          {suggestions.length} {suggestions.length === 1 ? "match" : "matches"}
+        </span>
+      </div>
+
       {suggestions.map((suggestion, index) => {
         const active = index === activeIdx;
 
@@ -398,12 +487,13 @@ function SuggestionList({ suggestions, activeIdx, onSelect, width }) {
               onSelect(suggestion.cmd);
             }}
             className={cn(
-              "flex w-full cursor-pointer items-baseline gap-3 border-none px-4 py-2.5 text-left transition-colors",
-              active ? "bg-[#4075F7]/10" : "bg-transparent"
+              "grid w-full cursor-pointer grid-cols-[0.75rem_minmax(5.5rem,0.8fr)_minmax(0,1.2fr)] items-baseline gap-1.5 border-none px-3 py-2 text-left font-mono transition-colors xs:grid-cols-[1rem_minmax(6.75rem,0.8fr)_minmax(0,1.2fr)] xs:gap-2 xs:px-4 sm:grid-cols-[1rem_minmax(8.5rem,0.8fr)_minmax(0,1.2fr)]",
+              active ? "bg-[#4075F7]/10" : "bg-transparent hover:bg-black/[0.025] dark:hover:bg-white/[0.035]"
             )}
           >
-            <span className={cn("font-mono text-sm", active ? "text-[#4075F7]" : "text-[#111] dark:text-[#f1f1f1]")}>{suggestion.cmd}</span>
-            <span className="text-xs text-[#aaa] dark:text-[#555]">{suggestion.desc}</span>
+            <span className="select-none text-[12px] text-[#4075F7] dark:text-[#7ea2ff]">$</span>
+            <span className={cn("min-w-0 break-words text-[12px] font-semibold sm:text-[13px]", active ? "text-[#4075F7] dark:text-[#7ea2ff]" : "text-[#252932] dark:text-[#e8ebf2]")}>{suggestion.cmd}</span>
+            <span className="min-w-0 text-[11px] font-normal text-[#7c8492] dark:text-[#7f8898] sm:text-[12px]">{suggestion.desc}</span>
           </button>
         );
       })}
@@ -636,7 +726,7 @@ export default function BottomNav({ activePage, onNavigate }) {
       if (norm === "light mode") setDark(false);
       if (norm === "music on") setMusic(true);
       if (norm === "music off") setMusic(false);
-      if (norm === "cat resume.pdf") setTimeout(() => window.open(RESUME_URL, "_blank"), 300);
+      if (norm === "cat resume.pdf") setTimeout(() => window.open(profile.resumeUrl, "_blank"), 300);
 
       setTimeout(() => inputRef.current?.focus(), 50);
     },
@@ -747,7 +837,7 @@ export default function BottomNav({ activePage, onNavigate }) {
         aria-label={ariaLabel || label}
         className={cn(
           "flex min-h-11 cursor-pointer flex-col items-center justify-center rounded-full border-none bg-transparent transition-colors duration-150",
-          isMobile ? "min-w-12 px-2.5 py-2" : isTablet ? "min-w-14 px-3 py-2" : "px-3.5 py-2",
+          isMobile ? "min-w-11 px-2 py-2 xs:min-w-12 xs:px-2.5" : isTablet ? "min-w-14 px-3 py-2" : "px-3.5 py-2",
           showLabel ? "gap-1" : "gap-0",
           active && isCompact && "bg-[#4075F7]/10",
           active ? "text-[#4075F7]" : "text-[#666] dark:text-[#888]"
@@ -796,12 +886,29 @@ export default function BottomNav({ activePage, onNavigate }) {
           )}
         </AnimatePresence>
 
-        <AnimatePresence>
-          {output && terminalReady && <OutputCard key={output.cmd + (output.error || "")} output={output} onClose={() => { setOutput(null); setTimeout(() => inputRef.current?.focus(), 30); }} width={cmdWidth} />}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {terminalReady && !output && <SuggestionList key="suggestions" suggestions={suggestions} activeIdx={activeIdx} onSelect={runCommand} width={cmdWidth} />}
+        <AnimatePresence mode="wait" initial={false}>
+          {terminalReady && (
+            output ? (
+              <OutputCard
+                key={`output-${output.cmd}-${output.error || "success"}`}
+                output={output}
+                onClose={() => {
+                  setOutput(null);
+                  setTimeout(() => inputRef.current?.focus(), 30);
+                }}
+                onRunCommand={runCommand}
+                width={cmdWidth}
+              />
+            ) : (
+              <SuggestionList
+                key="suggestions"
+                suggestions={suggestions}
+                activeIdx={activeIdx}
+                onSelect={runCommand}
+                width={cmdWidth}
+              />
+            )
+          )}
         </AnimatePresence>
 
         <AnimatePresence>
@@ -816,7 +923,7 @@ export default function BottomNav({ activePage, onNavigate }) {
             height: { type: "spring", stiffness: 230, damping: 30, mass: 0.9 },
           }}
           className={cn(
-            "max-w-[calc(100vw-24px)] pointer-events-auto flex items-center justify-center overflow-hidden rounded-full bg-white dark:bg-[#1c1c1e]",
+            "max-w-[calc(100vw-24px)] pointer-events-auto flex items-center justify-center overflow-hidden rounded-full bg-white dark:bg-[#252525]",
             termOpen
               ? "border-[1.5px] border-[#4075F7] shadow-[0_0_0_4px_rgba(64,117,247,0.12),0_4px_28px_rgba(0,0,0,0.14)]"
               : "border border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.08)] dark:border-white/10"
@@ -831,7 +938,7 @@ export default function BottomNav({ activePage, onNavigate }) {
                 initial={false}
                 animate={pillPhase === PILL_PHASE.ICONS_OUT ? "hidden" : "visible"}
                 exit="hidden"
-                className={cn("box-border flex items-center", isMobile ? "gap-1 px-2.5 py-[7px]" : isTablet ? "gap-[3px] px-3 py-2" : "gap-0.5 px-4 py-2")}
+                className={cn("box-border flex items-center", isMobile ? "gap-0.5 px-1.5 py-[7px] xs:gap-1 xs:px-2.5" : isTablet ? "gap-[3px] px-3 py-2" : "gap-0.5 px-4 py-2")}
               >
                 {visibleItems.map(({ id, label }) => {
                   const Icon = ICON_MAP[id];
@@ -888,7 +995,7 @@ export default function BottomNav({ activePage, onNavigate }) {
                 exit="hidden"
                 className={cn("box-border flex h-full w-full items-center", isCompact ? "gap-2 px-3.5" : "gap-2.5 px-[18px]")}
               >
-                <span className="shrink-0 font-mono text-sm text-[#4075F7]">$</span>
+                <TerminalPrompt compact={isCompact} />
 
                 <div className="relative flex items-center flex-1 overflow-hidden">
                   <span aria-hidden="true" className="absolute inset-0 flex items-center font-mono text-sm whitespace-pre pointer-events-none select-none text-black/15 dark:text-white/20">
@@ -908,7 +1015,11 @@ export default function BottomNav({ activePage, onNavigate }) {
                   />
                 </div>
 
-                {!isCompact && <span className="shrink-0 whitespace-nowrap text-[11px] text-black/25 dark:text-white/25">tab - up/down - esc</span>}
+                {!isCompact && (
+                  <span className="shrink-0 whitespace-nowrap font-mono text-[10px] text-black/30 dark:text-white/30">
+                    tab · ↑↓ · esc
+                  </span>
+                )}
 
                 <motion.button
                   type="button"

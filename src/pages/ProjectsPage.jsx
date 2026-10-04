@@ -4,6 +4,7 @@ import SectionTitle from "../components/common/SectionTitle";
 import FilterTabs from "../components/common/FilterTabs";
 import ProjectCard from "../components/cards/ProjectCard";
 import { projects } from "../data";
+import { createAlphabeticalFilterTabs } from "../utils/filterOptions";
 
 const ALL_TAB = "All";
 
@@ -34,7 +35,7 @@ export default function ProjectsPage({ onSelectProject }) {
       getProjectCategories(project)
     );
 
-    return [ALL_TAB, ...new Set(categories)];
+    return createAlphabeticalFilterTabs(categories);
   }, []);
 
   const filtered =
@@ -48,7 +49,12 @@ export default function ProjectsPage({ onSelectProject }) {
     <SectionWrapper>
       <SectionTitle accent="Project" rest="Spotlight" />
 
-      <FilterTabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
+      <FilterTabs
+        tabs={tabs}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        ariaLabel="Filter projects by category"
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 auto-rows-[minmax(220px,auto)] gap-4">
         {filtered.map((project, i) => (

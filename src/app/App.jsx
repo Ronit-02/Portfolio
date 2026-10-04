@@ -110,7 +110,7 @@ function AppInner() {
     })();
 
     return (
-      <div className="min-h-screen bg-white font-satoshi transition-colors duration-300 dark:bg-[#0f0f0f]">
+      <div className="min-h-screen bg-white font-satoshi transition-colors duration-300 dark:bg-[#191919]">
         <TopNav
           portfolioSide={isLifeSide ? "life" : "work"}
           onSwitchPortfolio={transitionLayer ? undefined : handleSwitchPortfolio}

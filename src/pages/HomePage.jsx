@@ -2,33 +2,24 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import SectionWrapper from "../components/common/SectionWrapper";
 import { XIcon, InstagramIcon, LinkedInIcon, BehanceIcon } from "../icons";
+import { homeContent, profile, socialLinks } from "../data";
 
-const SOCIALS = [
-  { label: "Instagram", href: "https://www.instagram.com/ronitxx9/", Icon: InstagramIcon },
-  { label: "X", href: "https://x.com/khatri_ronit1", Icon: XIcon },
-  { label: "Behance", href: "https://www.behance.net/ronitkhatri", Icon: BehanceIcon },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/ronit-khatri/", Icon: LinkedInIcon },
-];
+const SOCIAL_ICONS = {
+  instagram: InstagramIcon,
+  x: XIcon,
+  behance: BehanceIcon,
+  linkedin: LinkedInIcon,
+};
+
+const SOCIALS = socialLinks
+  .filter(({ id }) => SOCIAL_ICONS[id])
+  .map((social) => ({ ...social, Icon: SOCIAL_ICONS[social.id] }));
 
 const SOCIAL_POSITIONS = [
   "md:left-[7%] md:top-[24%] lg:left-[9%] xl:left-[11%]",
   "md:left-[1%] md:bottom-[22%] lg:left-[3%] xl:left-[5%]",
   "md:right-[7%] md:top-[24%] lg:right-[9%] xl:right-[11%]",
   "md:right-[1%] md:bottom-[22%] lg:right-[3%] xl:right-[5%]",
-];
-
-const TICKER_ITEMS = [
-  { label: "Currently building", value: "Soundscape" },
-  { label: "Currently learning", value: "Three Js" },
-  { label: "Listening on loop", value: "Victory Lap" },
-  { label: "Coffee count today", value: "☕ ☕ ☕" },
-];
-
-const STATS = [
-  { value: 2, suffix: "+", label: "Years experience" },
-  { value: 10, suffix: "+", label: "Projects shipped" },
-  { value: 50, suffix: "k+", label: "Lines of code" },
-  { value: 147, suffix: "", label: "Cups of coffee ☕" },
 ];
 
 function Counter({ value, suffix, label, delay }) {
@@ -69,7 +60,7 @@ function Counter({ value, suffix, label, delay }) {
 }
 
 function LiveTicker() {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  const items = [...homeContent.tickerItems, ...homeContent.tickerItems];
 
   return (
     <div className="w-full max-w-full min-w-0 overflow-hidden rounded-2xl border border-[#4075F7]/[0.12] bg-[#4075F7]/[0.06] py-3">
@@ -96,8 +87,8 @@ function LiveTicker() {
   );
 }
 
-const FIRST = "RONIT".split("");
-const LAST = "KHATRI".split("");
+const FIRST = profile.firstName.toUpperCase().split("");
+const LAST = profile.lastName.toUpperCase().split("");
 
 function AnimatedName() {
   const letterVariants = {
@@ -124,7 +115,7 @@ function AnimatedName() {
   return (
     <div
       className="w-full max-w-full min-w-0 overflow-hidden text-center leading-[0.84] [perspective:600px] md:leading-[0.92]"
-      aria-label="Ronit Khatri"
+      aria-label={profile.fullName}
     >
       <div className="flex w-full items-end justify-center overflow-hidden pr-[0.065em]">
         {FIRST.map((ch, i) => (
@@ -163,7 +154,7 @@ function AnimatedName() {
 
 function FloatingSocials() {
   return (
-    <div className="flex justify-center gap-5 mt-7 md:pointer-events-none md:absolute md:inset-0 md:z-10 md:mt-0 md:block">
+    <div className="mt-6 flex justify-center gap-2.5 xs:gap-4 sm:mt-7 sm:gap-5 md:pointer-events-none md:absolute md:inset-0 md:z-10 md:mt-0 md:block">
       {SOCIALS.map(({ label, href, Icon }, i) => (
         <motion.div
           key={label}
@@ -178,7 +169,7 @@ function FloatingSocials() {
           className={`
             ${SOCIAL_POSITIONS[i]}
             pointer-events-auto relative
-            h-16 w-16 md:absolute md:h-14 md:w-14 lg:h-16 lg:w-16
+            h-12 w-12 xs:h-14 xs:w-14 sm:h-16 sm:w-16 md:absolute md:h-14 md:w-14 lg:h-16 lg:w-16
           `}
         >
           <motion.a
@@ -199,7 +190,7 @@ function FloatingSocials() {
               damping: 18,
               mass: 0.5,
             }}
-            className="flex h-full w-full items-center justify-center rounded-full border border-gray-300 bg-white/70 text-gray-600 backdrop-blur-sm transition-colors duration-75 hover:text-blue-500 dark:border-gray-700 dark:bg-[#0f0f0f] dark:text-gray-300"
+            className="flex h-full w-full items-center justify-center rounded-full border border-gray-300 bg-white/70 text-gray-600 backdrop-blur-sm transition-colors duration-75 hover:text-blue-500 dark:border-[#373737] dark:bg-[#202020] dark:text-[#c7c6c3]"
           >
             <Icon />
           </motion.a>
@@ -225,8 +216,8 @@ export default function HomePage() {
           >
             <div className="flex-1 hidden h-px bg-gray-300 dark:bg-gray-700 sm:block" />
 
-            <p className="max-w-[18rem] text-center text-base leading-tight text-gray-900 dark:text-gray-200 sm:max-w-none sm:whitespace-nowrap sm:text-sm md:text-base md:text-gray-500 md:dark:text-gray-400">
-              A versatile creator specializing in Design and Development
+            <p className="max-w-[18rem] text-center text-sm leading-tight text-gray-900 xs:text-base sm:max-w-none sm:whitespace-nowrap sm:text-sm md:text-base md:text-gray-500 dark:text-gray-200 md:dark:text-gray-400">
+              {profile.headline}
             </p>
 
             <div className="flex-1 hidden h-px bg-gray-300 dark:bg-gray-700 sm:block" />
@@ -253,9 +244,9 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...spring, delay: 1.4 }}
-            className="grid w-full max-w-full min-w-0 grid-cols-2 pt-4 pb-2 gap-x-4 gap-y-6 sm:grid-cols-4 sm:gap-6 sm:pt-6"
+            className="grid w-full max-w-full min-w-0 grid-cols-2 gap-x-2 gap-y-6 pb-2 pt-4 xs:gap-x-4 sm:grid-cols-4 sm:gap-6 sm:pt-6"
           >
-            {STATS.map((stat, i) => (
+            {homeContent.stats.map((stat, i) => (
               <Counter
                 key={stat.label}
                 value={stat.value}

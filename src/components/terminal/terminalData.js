@@ -1,9 +1,24 @@
+import {
+  experience,
+  profile,
+  projects,
+  skillGroups,
+  socialLinks,
+} from "../../data";
+
+const currentExperience =
+  experience.find(({ year }) => year.includes("Present")) || experience[0];
+
+const row = (key, value, accent = null) => ({ key, value, accent });
+const output = (title, meta, rows) => ({ title, meta, rows });
+
 export const COMMANDS_LIST = [
-  { cmd: "whoami", desc: "Who is Ronit?" },
+  { cmd: "whoami", desc: `Who is ${profile.firstName}?` },
   { cmd: "ls projects", desc: "List all projects" },
   { cmd: "skills", desc: "View tech stack" },
   { cmd: "cat resume.pdf", desc: "Open resume PDF" },
   { cmd: "contact", desc: "Get in touch" },
+  { cmd: "social", desc: "View social profiles" },
   { cmd: "music on", desc: "Enable background music" },
   { cmd: "music off", desc: "Disable background music" },
   { cmd: "dark mode", desc: "Switch to dark mode" },
@@ -12,40 +27,70 @@ export const COMMANDS_LIST = [
 ];
 
 export const OUTPUTS = {
-  whoami: [
-    { t: "primary", v: "Ronit Khatri - Technology Associate, ZS Associates" },
-    { t: "muted", v: "Delhi, India  -  Full-stack developer" },
-    { t: "", v: "" },
-    { t: "blue", v: "Loves: music, coffee, late-night builds" },
-    { t: "muted", v: "Hates: prop drilling, Comic Sans" },
-  ],
-  "ls projects": [
-    { t: "primary", v: "Soundscape    - React Native, FastAPI, PostgreSQL" },
-    { t: "primary", v: "Ink Rider     - React, Node.js, MongoDB" },
-    { t: "primary", v: "FraudGuard    - Flask, scikit-learn, React" },
-  ],
-  skills: [
-    { t: "blue", v: "Frontend  -- React, TypeScript, Next.js, Tailwind" },
-    { t: "blue", v: "Backend   -- Python, FastAPI, Node, Express" },
-    { t: "blue", v: "Cloud     -- AWS Lambda, Glue, Step Functions, S3" },
-    { t: "blue", v: "Data      -- Pandas, PySpark, SQL, MongoDB" },
-  ],
-  "cat resume.pdf": [
-    { t: "muted", v: "Fetching resume.pdf ..." },
-    { t: "blue", v: "Opening in new tab" },
-  ],
-  contact: [
-    { t: "primary", v: "ronitkhatri44@gmail.com" },
-    { t: "blue", v: "linkedin.com/in/ronit-khatri" },
-    { t: "blue", v: "github.com/ronitkhatri" },
-  ],
-  "music on": [{ t: "blue", v: "Background music enabled. Vibe unlocked." }],
-  "music off": [{ t: "muted", v: "Music off. Back to silence." }],
-  "dark mode": [{ t: "blue", v: "Switching to dark mode..." }],
-  "light mode": [{ t: "blue", v: "Switching to light mode..." }],
+  whoami: output("identity", "profile", [
+    row("name", profile.fullName, "value"),
+    row("role", `${currentExperience.title} @ ${currentExperience.company}`),
+    row("based in", profile.location),
+    row("focus", profile.terminalRole),
+    row("likes", profile.likes.join(", ")),
+    row("avoids", profile.dislikes.join(", ")),
+  ]),
+  "ls projects": output(
+    "projects",
+    `${projects.length} entries`,
+    projects.map((project, index) =>
+      row(
+        `${String(index + 1).padStart(2, "0")} ${project.title}`,
+        project.code.stack.join(", "),
+        "key"
+      )
+    )
+  ),
+  skills: output(
+    "skills",
+    `${skillGroups.length} groups`,
+    skillGroups.map((group) =>
+      row(group.label.toLowerCase(), group.items.join(", "))
+    )
+  ),
+  "cat resume.pdf": output("file", "resume.pdf", [
+    row("source", "~/documents/resume.pdf"),
+    row("status", "opening in a new tab", "value"),
+  ]),
+  contact: output("contact", "direct", [
+    row("email", profile.email, "value"),
+  ]),
+  social: output(
+    "social",
+    `${socialLinks.length} profiles`,
+    socialLinks.map((social) =>
+      row(
+        social.label.toLowerCase(),
+        social.href.replace(/^https?:\/\/(www\.)?/, ""),
+        "value"
+      )
+    )
+  ),
+  "music on": output("system", "updated", [
+    row("setting", "background_music"),
+    row("status", "enabled", "value"),
+  ]),
+  "music off": output("system", "updated", [
+    row("setting", "background_music"),
+    row("status", "disabled", "value"),
+  ]),
+  "dark mode": output("appearance", "updated", [
+    row("theme", "dark"),
+    row("status", "active", "value"),
+  ]),
+  "light mode": output("appearance", "updated", [
+    row("theme", "light"),
+    row("status", "active", "value"),
+  ]),
 };
 
-OUTPUTS.help = COMMANDS_LIST.map((command) => ({
-  t: "primary",
-  v: `  ${command.cmd.padEnd(18)}${command.desc}`,
-}));
+OUTPUTS.help = output(
+  "commands",
+  `${COMMANDS_LIST.length} available`,
+  COMMANDS_LIST.map((command) => row(command.cmd, command.desc, "key"))
+);
