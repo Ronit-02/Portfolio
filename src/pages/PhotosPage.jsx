@@ -8,7 +8,9 @@ import {
 import SectionWrapper from "../components/common/SectionWrapper";
 import SectionTitle from "../components/common/SectionTitle";
 import FilterTabs from "../components/common/FilterTabs";
+import ImageHoverLabel from "../components/common/ImageHoverLabel";
 import { photos } from "../data";
+import { createNewestFirstFilterTabs } from "../utils/filterOptions";
 
 const IMAGE_LOAD_DELAY_MS = 180;
 const EAGER_IMAGE_COUNT = 3;
@@ -83,13 +85,9 @@ const PhotoCard = memo(function PhotoCard({
   photo,
   index,
   canLoadImages,
-  isLabelPinned,
-  isSelected,
-  onPhotoClick,
-  onFocus,
-  onBlur,
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isHoverDismissed, setIsHoverDismissed] = useState(false);
   const shouldLoadEarly = index < EAGER_IMAGE_COUNT;
 
   useEffect(() => {
@@ -97,22 +95,17 @@ const PhotoCard = memo(function PhotoCard({
   }, [photo.id]);
 
   return (
-    <button
-      type="button"
-      onClick={() => onPhotoClick(photo.id)}
-      onFocus={() => onFocus(photo.id)}
-      onBlur={onBlur}
-      aria-label={`View description for ${photo.alt}`}
-      aria-pressed={isSelected}
-      className="
-        group cursor-pointer overflow-hidden rounded-xs bg-gray-100 text-left
+    <figure
+      onPointerDown={() => setIsHoverDismissed(true)}
+      onPointerLeave={() => setIsHoverDismissed(false)}
+      className={`
+        photo-hover-surface overflow-hidden rounded-xs bg-gray-100 text-left
         transition-transform duration-200 ease-out
-        hover:scale-[1.01] active:scale-[0.99]
         dark:bg-gray-800
-        focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4075F7]
-        focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black
         [content-visibility:auto] [contain-intrinsic-size:400px_532px]
-      "
+        motion-reduce:transition-none
+        ${isHoverDismissed ? "is-hover-dismissed" : ""}
+      `}
     >
       <div className="relative overflow-hidden pb-[133%]">
         {!isLoaded && (
@@ -130,40 +123,22 @@ const PhotoCard = memo(function PhotoCard({
             onLoad={() => setIsLoaded(true)}
             onError={() => setIsLoaded(true)}
             className={`
-              absolute inset-0 h-full w-full object-cover
+              photo-hover-media absolute inset-0 h-full w-full object-cover
               transition-[opacity,transform] duration-500 ease-out
-              group-hover:scale-[1.035]
+              motion-reduce:transition-none
               ${isLoaded ? "opacity-100" : "opacity-0"}
             `}
           />
         )}
 
-        <div
-          className={`
-            absolute right-3 top-3 z-10 max-w-[78%] rounded-full bg-white
-            px-3.5 py-2 text-xs font-normal leading-snug tracking-[-0.01em]
-            text-[#4075F7] antialiased shadow-[0_10px_30px_rgba(0,0,0,0.14)]
-            transition-all duration-200 ease-out [font-synthesis:none]
-            sm:right-4 sm:top-4 sm:px-4 sm:py-2.5 sm:text-sm
-            group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100
-            ${
-              isLabelPinned
-                ? "translate-x-0 translate-y-0 opacity-100"
-                : "pointer-events-none translate-x-2 -translate-y-2 opacity-0"
-            }
-          `}
-        >
-          {photo.alt}
-        </div>
+        <ImageHoverLabel>{photo.alt}</ImageHoverLabel>
       </div>
-    </button>
+    </figure>
   );
 });
 
 export default function PhotosPage() {
   const [activeTab, setActiveTab] = useState("All");
-  const [selectedPhotoId, setSelectedPhotoId] = useState(null);
-  const [focusedPhotoId, setFocusedPhotoId] = useState(null);
 
   const [randomizedPhotos] = useState(() => shuffleArray(photos));
 
@@ -172,7 +147,7 @@ export default function PhotosPage() {
   const TABS = useMemo(() => {
     const years = photos.map((photo) => photo.year).filter(Boolean);
 
-    return ["All", ...new Set(years)];
+    return createNewestFirstFilterTabs(years);
   }, []);
 
   const filteredPhotos = useMemo(() => {
@@ -183,22 +158,6 @@ export default function PhotosPage() {
 
   const handleTabChange = useCallback((tab) => {
     setActiveTab(tab);
-    setSelectedPhotoId(null);
-    setFocusedPhotoId(null);
-  }, []);
-
-  const handlePhotoClick = useCallback((photoId) => {
-    setSelectedPhotoId((currentId) =>
-      currentId === photoId ? null : photoId
-    );
-  }, []);
-
-  const handleFocus = useCallback((photoId) => {
-    setFocusedPhotoId(photoId);
-  }, []);
-
-  const handleBlur = useCallback(() => {
-    setFocusedPhotoId(null);
   }, []);
 
   return (
@@ -209,27 +168,18 @@ export default function PhotosPage() {
         tabs={TABS}
         activeTab={activeTab}
         onChange={handleTabChange}
+        ariaLabel="Filter photos by year"
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {filteredPhotos.map((photo, index) => {
-          const isSelected = selectedPhotoId === photo.id;
-          const isFocused = focusedPhotoId === photo.id;
-
-          return (
-            <PhotoCard
-              key={photo.id}
-              photo={photo}
-              index={index}
-              canLoadImages={canLoadImages}
-              isSelected={isSelected}
-              isLabelPinned={isSelected || isFocused}
-              onPhotoClick={handlePhotoClick}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          );
-        })}
+        {filteredPhotos.map((photo, index) => (
+          <PhotoCard
+            key={photo.id}
+            photo={photo}
+            index={index}
+            canLoadImages={canLoadImages}
+          />
+        ))}
       </div>
     </SectionWrapper>
   );

@@ -20,7 +20,7 @@ export default function PortfolioLayerTransition({ children, onComplete }) {
       aria-hidden="true"
     >
       <motion.div
-        className="absolute inset-0 overflow-hidden bg-white [will-change:clip-path] dark:bg-[#0f0f0f]"
+        className="absolute inset-0 overflow-hidden bg-white [will-change:clip-path] dark:bg-[#191919]"
         initial={
           reduceMotion
             ? { opacity: 1 }

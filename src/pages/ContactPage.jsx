@@ -3,16 +3,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import SectionWrapper from "../components/common/SectionWrapper";
 import SectionTitle from "../components/common/SectionTitle";
 import { BehanceIcon, CheckIcon, InstagramIcon, LinkedInIcon, XIcon } from "../icons";
+import { contactContent, profile, socialLinks } from "../data";
 import { cn } from "../utils/cn";
 
-const SOCIALS = [
-  { label: "X / Twitter", href: "https://x.com/khatri_ronit1", Icon: XIcon, handle: "@khatri_ronit1" },
-  { label: "Instagram", href: "https://www.instagram.com/ronitxx9/", Icon: InstagramIcon, handle: "@ronitxx9" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/ronit-khatri/", Icon: LinkedInIcon, handle: "ronit-khatri" },
-  { label: "Behance", href: "https://www.behance.net/ronitkhatri", Icon: BehanceIcon, handle: "ronitkhatri" },
-];
+const SOCIAL_ICONS = {
+  instagram: InstagramIcon,
+  x: XIcon,
+  behance: BehanceIcon,
+  linkedin: LinkedInIcon,
+};
 
-const inputBase = "w-full rounded-xl border px-5 py-3 text-base text-gray-800 outline-none transition-colors duration-200 placeholder:text-gray-400 focus:border-[#4075F7] dark:bg-[#1a1a1a] dark:text-gray-100 dark:placeholder:text-gray-600";
+const SOCIALS = socialLinks
+  .filter(({ id }) => SOCIAL_ICONS[id])
+  .map((social) => ({ ...social, Icon: SOCIAL_ICONS[social.id] }));
+
+const inputBase = "w-full rounded-xl border px-4 py-3 text-base text-gray-800 outline-none transition-colors duration-200 placeholder:text-gray-400 focus:border-[#4075F7] sm:px-5 dark:bg-[#1a1a1a] dark:text-gray-100 dark:placeholder:text-gray-600";
 
 function FieldError({ children }) {
   if (!children) return null;
@@ -55,7 +60,7 @@ export default function ContactPage() {
     <SectionWrapper>
       <SectionTitle accent="Get In" rest="Touch" />
 
-      <div className="flex flex-col gap-12 md:flex-row">
+      <div className="flex flex-col gap-9 sm:gap-12 md:flex-row">
         <motion.div
           initial={{ opacity: 0, x: -24 }}
           animate={{ opacity: 1, x: 0 }}
@@ -63,13 +68,13 @@ export default function ContactPage() {
           className="shrink-0 md:w-64"
         >
           <p className="mb-6 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-            Have a project in mind or just want to say hello? I'd love to hear from you. Reach out via the form or through any of my social channels.
+            {contactContent.introduction}
           </p>
 
           <div className="mb-4">
             <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">Email</p>
-            <a href="mailto:ronit@example.com" className="text-sm text-gray-700 transition-colors hover:text-[#4075F7] dark:text-gray-300">
-              ronit@example.com
+            <a href={`mailto:${profile.email}`} className="break-all text-sm text-gray-700 transition-colors hover:text-[#4075F7] dark:text-gray-300">
+              {profile.email}
             </a>
           </div>
 
@@ -84,12 +89,12 @@ export default function ContactPage() {
                   rel="noopener noreferrer"
                   whileHover={{ x: 4 }}
                   transition={{ type: "spring", stiffness: 500, damping: 28 }}
-                  className="flex items-center gap-3 text-sm text-gray-600 transition-colors hover:text-[#4075F7] dark:text-gray-400 dark:hover:text-blue-400"
+                  className="flex min-w-0 items-center gap-3 text-sm text-gray-600 transition-colors hover:text-[#4075F7] dark:text-gray-400 dark:hover:text-blue-400"
                 >
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gray-200 dark:border-gray-700">
                     <Icon />
                   </span>
-                  <span>{handle}</span>
+                  <span className="min-w-0 break-all">{handle}</span>
                 </motion.a>
               ))}
             </div>
@@ -115,8 +120,8 @@ export default function ContactPage() {
                 <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#EBF0FF]">
                   <CheckIcon />
                 </div>
-                <p className="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-100">Message sent!</p>
-                <p className="mb-6 text-sm text-gray-500">I'll get back to you soon.</p>
+                <p className="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-100">{contactContent.successTitle}</p>
+                <p className="mb-6 text-sm text-gray-500">{contactContent.successMessage}</p>
                 <button
                   type="button"
                   onClick={() => {

@@ -32,9 +32,9 @@ export default function ProjectCard({ project, onClick, index = 0 }) {
       <HoverImageCard image={project.image} title={project.title} imageClassName="h-64" />
 
       <div className="space-y-2">
-        <div className="inline-flex items-center gap-2 text-sm font-semibold text-[#4075F7] dark:text-blue-400">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#4075F7] dark:bg-blue-400" />
-          {categoryLabel}
+        <div className="flex min-w-0 items-start gap-2 text-xs font-semibold leading-relaxed text-[#4075F7] xs:text-sm dark:text-blue-400">
+          <span className="mt-[0.45em] h-1.5 w-1.5 shrink-0 rounded-full bg-[#4075F7] dark:bg-blue-400" />
+          <span className="min-w-0 break-words">{categoryLabel}</span>
         </div>
 
         <h3 className="text-2xl font-bold leading-snug text-black dark:text-white">

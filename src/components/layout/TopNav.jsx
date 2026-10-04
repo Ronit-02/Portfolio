@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { profile } from "../../data";
 import { ChevronDown } from "../../icons";
 
 export default function TopNav({
@@ -24,9 +25,9 @@ export default function TopNav({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="sticky top-0 z-40 w-full overflow-x-hidden border-b border-gray-100 bg-white dark:border-gray-800 dark:bg-[#0f0f0f]"
+      className="sticky top-0 z-40 w-full overflow-x-hidden border-b border-gray-100 bg-white dark:border-[#303030] dark:bg-[#191919]"
     >
-      <header className="relative mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4 sm:px-6 sm:py-2.5 md:px-12 md:py-4">
+      <header className="relative mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-4 xs:px-6 sm:gap-4 sm:py-2.5 md:px-12 md:py-4">
         <motion.div
           initial="rest"
           animate="rest"
@@ -45,7 +46,7 @@ export default function TopNav({
             }}
             className="select-none font-script text-[2rem] font-normal leading-none text-gray-600 xs:text-4xl sm:text-4xl md:text-4xl dark:text-gray-300"
           >
-            Ronit
+            {profile.firstName}
           </motion.span>
 
           <motion.span
@@ -78,7 +79,7 @@ export default function TopNav({
             whileTap={switchDisabled ? undefined : { scale: 0.96 }}
             whileDrag={switchDisabled ? undefined : { scale: 1.04 }}
             transition={{ type: "spring", stiffness: 430, damping: 25 }}
-            className="group flex h-7 w-11 cursor-grab items-center justify-center rounded-b-xl border-x border-b border-gray-200 bg-white/95 text-gray-500 shadow-[0_5px_16px_rgba(18,24,38,0.07)] outline-none backdrop-blur-sm hover:border-[#4075F7]/35 hover:text-[#4075F7] focus-visible:ring-2 focus-visible:ring-[#4075F7] focus-visible:ring-offset-2 active:cursor-grabbing disabled:cursor-default disabled:opacity-60 dark:border-gray-800 dark:bg-[#0f0f0f]/95 dark:text-gray-400 dark:hover:border-[#4075F7]/45 dark:hover:text-[#7ea2ff] dark:focus-visible:ring-offset-[#0f0f0f]"
+            className="group flex h-7 w-11 cursor-grab items-center justify-center rounded-b-xl border-x border-b border-gray-200 bg-white/95 text-gray-500 shadow-[0_5px_16px_rgba(18,24,38,0.07)] outline-none backdrop-blur-sm hover:border-[#4075F7]/35 hover:text-[#4075F7] focus-visible:ring-2 focus-visible:ring-[#4075F7] focus-visible:ring-offset-2 active:cursor-grabbing disabled:cursor-default disabled:opacity-60 dark:border-[#303030] dark:bg-[#202020]/95 dark:text-[#9b9a97] dark:hover:border-[#4075F7]/45 dark:hover:text-[#8eafff] dark:focus-visible:ring-offset-[#191919]"
           >
             <motion.span
               aria-hidden="true"
@@ -96,7 +97,7 @@ export default function TopNav({
           <motion.div
             whileHover={{ scale: 1.03, borderColor: "rgba(64,117,247,0.35)" }}
             transition={{ type: "spring", stiffness: 420, damping: 22 }}
-            className="hidden max-w-full items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50/80 px-2 py-1 text-gray-700 xs:inline-flex sm:gap-2 sm:px-3 dark:border-gray-800 dark:bg-white/[0.04] dark:text-gray-300"
+            className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50/80 px-2 py-1 text-gray-700 sm:gap-2 sm:px-3 dark:border-gray-800 dark:bg-white/[0.04] dark:text-gray-300"
           >
             <span className="relative flex h-1.5 w-1.5 shrink-0 sm:h-2 sm:w-2">
               <motion.span
@@ -108,7 +109,7 @@ export default function TopNav({
             </span>
 
             <span className="whitespace-nowrap text-[9px] font-medium uppercase tracking-[clamp(0.08em,1vw,0.16em)] sm:text-[10px] md:text-xs">
-              Delhi, India
+              {profile.location}
             </span>
           </motion.div>
 
