@@ -269,7 +269,7 @@ function CompactSheet({
                 );
               })}
 
-              <div className="mx-2 my-1 h-px bg-black/10 dark:bg-white/10" />
+              <div className="h-px mx-2 my-1 bg-black/10 dark:bg-white/10" />
 
               <MenuRow icon={<SettingsIcon active={false} />} label="Settings" onClick={onShowSettings} />
 
@@ -890,10 +890,10 @@ export default function BottomNav({ activePage, onNavigate }) {
         )}
       </AnimatePresence>
 
-      {!termOpen && activePage !== "home" && (
+      {!termOpen && (
         <div
           aria-hidden="true"
-          className="pointer-events-none fixed inset-x-0 bottom-0 z-20 h-24 bg-white dark:bg-[#191919] sm:h-28"
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-20 h-[75px] bg-white dark:bg-[#191919] sm:h-[120px] lg:h-[130px]"
         />
       )}
 
@@ -941,7 +941,7 @@ export default function BottomNav({ activePage, onNavigate }) {
               className={cn(
                 "pointer-events-none absolute left-1/2 -translate-x-1/2 rounded-full border-[1.25px] border-[#181a1e]/25 dark:border-white/25",
                 isMobile
-                  ? "-bottom-[17.5rem] h-[20rem] w-[20rem]"
+                  ? "-bottom-[22.5rem] h-[25rem] w-[25rem]"
                   : isTablet
                     ? "-bottom-[31.2rem] h-[36rem] w-[36rem]"
                     : "-bottom-[51.5rem] h-[57rem] w-[57rem]"
@@ -957,7 +957,7 @@ export default function BottomNav({ activePage, onNavigate }) {
                 initial={false}
                 animate={pillPhase === PILL_PHASE.ICONS_OUT ? "hidden" : "visible"}
                 exit="hidden"
-                className={cn("relative z-10 box-border flex items-center", isMobile ? "gap-1 px-1 pb-2 pt-8" : isTablet ? "gap-1 px-2 pb-2 pt-8" : "gap-1 px-2 pb-1 pt-8")}
+                className={cn("relative z-10 box-border flex items-center", isMobile ? "gap-3 px-1 pb-2 pt-8" : isTablet ? "gap-1 px-2 pb-2 pt-8" : "gap-1 px-2 pb-1 pt-8")}
               >
                 {visibleItems.map(({ id, label }, index) => {
                   const Icon = ICON_MAP[id];
