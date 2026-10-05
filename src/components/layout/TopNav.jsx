@@ -1,120 +1,49 @@
-import { motion } from "framer-motion";
 import { profile } from "../../data";
-import { ChevronDown } from "../../icons";
 
-export default function TopNav({
-  portfolioSide = "work",
-  onSwitchPortfolio,
-  switchDisabled = false,
-}) {
-  const isLifeSide = portfolioSide === "life";
-  const switchLabel = isLifeSide
-    ? "Return to work portfolio"
-    : "Open personal portfolio";
+const PAGE_META = {
+  about: { accent: "My", rest: "Narrative", orbit: "01" },
+  experience: { accent: "My Story", rest: "Unfolds", orbit: "02" },
+  projects: { accent: "Project", rest: "Spotlight", orbit: "03" },
+  blog: { accent: "Mindful", rest: "Reflections", orbit: "04" },
+  photos: { accent: "Artistic", rest: "Impressions", orbit: "05" },
+  contact: { accent: "Get In", rest: "Touch", orbit: "06" },
+};
 
-  const handlePullEnd = (_, info) => {
-    if (switchDisabled) return;
-
-    if (info.offset.y > 10 || info.velocity.y > 140) {
-      onSwitchPortfolio?.();
-    }
-  };
+export default function TopNav({ activePage = "about" }) {
+  const pageMeta = PAGE_META[activePage] || PAGE_META.about;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="sticky top-0 z-40 w-full overflow-x-hidden border-b border-gray-100 bg-white dark:border-[#303030] dark:bg-[#191919]"
-    >
-      <header className="relative mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-4 xs:px-6 sm:gap-4 sm:py-2.5 md:px-12 md:py-4">
-        <motion.div
-          initial="rest"
-          animate="rest"
-          whileHover="hover"
-          whileTap={{ scale: 0.96 }}
-          className="relative inline-flex cursor-default shrink-0"
-        >
-          <motion.span
-            variants={{
-              rest: { rotate: 0, scale: 1 },
-              hover: {
-                rotate: -2,
-                scale: 1.04,
-                transition: { type: "spring", stiffness: 420, damping: 18 },
-              },
-            }}
-            className="select-none font-script text-[2rem] font-normal leading-none text-gray-600 xs:text-4xl sm:text-4xl md:text-4xl dark:text-gray-300"
-          >
-            {profile.firstName}
-          </motion.span>
+    <>
+      <header
+        className="relative z-40 h-[9.75rem] w-full overflow-hidden bg-white/75 dark:bg-[#191919]/75 sm:h-44"
+      >
+        <div aria-hidden="true" className="absolute inset-0 opacity-[0.17] [background-image:radial-gradient(circle,rgba(24,26,30,.2)_1px,transparent_1px)] [background-size:24px_24px] dark:opacity-[0.07]" />
 
-          <motion.span
-            variants={{
-              rest: { scaleX: 0, opacity: 0 },
-              hover: {
-                scaleX: 1,
-                opacity: 1,
-                transition: { type: "spring", stiffness: 380, damping: 24 },
-              },
-            }}
-            className="absolute -bottom-1 left-1 right-1 h-[2px] origin-left rounded-full bg-[#4075F7]"
-          />
-        </motion.div>
+      <div className="absolute left-4 top-5 z-20 flex items-center gap-2.5 sm:left-7 sm:top-7">
+        <span className="h-2 w-2 rounded-full bg-[#4075F7]" />
+        <span className="hidden font-mono text-[9px] uppercase tracking-[0.18em] text-[#70747b] dark:text-white/45 lg:inline">
+          Creative engineer · {profile.location}
+        </span>
+      </div>
 
-        <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2">
-          <motion.button
-            type="button"
-            onClick={onSwitchPortfolio}
-            onDragEnd={handlePullEnd}
-            disabled={switchDisabled}
-            aria-label={switchLabel}
-            title={switchLabel}
-            drag={switchDisabled ? false : "y"}
-            dragConstraints={{ top: 0, bottom: 18 }}
-            dragElastic={0.24}
-            dragMomentum={false}
-            dragSnapToOrigin
-            whileHover={switchDisabled ? undefined : { y: 2 }}
-            whileTap={switchDisabled ? undefined : { scale: 0.96 }}
-            whileDrag={switchDisabled ? undefined : { scale: 1.04 }}
-            transition={{ type: "spring", stiffness: 430, damping: 25 }}
-            className="group flex h-7 w-11 cursor-grab items-center justify-center rounded-b-xl border-x border-b border-gray-200 bg-white/95 text-gray-500 shadow-[0_5px_16px_rgba(18,24,38,0.07)] outline-none backdrop-blur-sm hover:border-[#4075F7]/35 hover:text-[#4075F7] focus-visible:ring-2 focus-visible:ring-[#4075F7] focus-visible:ring-offset-2 active:cursor-grabbing disabled:cursor-default disabled:opacity-60 dark:border-[#303030] dark:bg-[#202020]/95 dark:text-[#9b9a97] dark:hover:border-[#4075F7]/45 dark:hover:text-[#8eafff] dark:focus-visible:ring-offset-[#191919]"
-          >
-            <motion.span
-              aria-hidden="true"
-              className="flex scale-75"
-              animate={{ y: 0 }}
-              whileHover={switchDisabled ? undefined : { y: 1.5 }}
-              transition={{ type: "spring", stiffness: 520, damping: 24 }}
-            >
-              <ChevronDown />
-            </motion.span>
-          </motion.button>
-        </div>
+      <div className="absolute right-7 top-7 z-20 hidden font-mono text-[9px] uppercase tracking-[0.18em] text-[#70747b] dark:text-white/45 lg:block">
+        Building across the stack
+      </div>
 
-        <div className="flex min-w-0 items-center justify-end gap-2 text-right sm:gap-3">
-          <motion.div
-            whileHover={{ scale: 1.03, borderColor: "rgba(64,117,247,0.35)" }}
-            transition={{ type: "spring", stiffness: 420, damping: 22 }}
-            className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50/80 px-2 py-1 text-gray-700 sm:gap-2 sm:px-3 dark:border-gray-800 dark:bg-white/[0.04] dark:text-gray-300"
-          >
-            <span className="relative flex h-1.5 w-1.5 shrink-0 sm:h-2 sm:w-2">
-              <motion.span
-                className="absolute inline-flex h-full w-full rounded-full bg-[#4075F7]"
-                animate={{ scale: [1, 2.2, 1], opacity: [0.75, 0, 0.75] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
-              />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#4075F7] sm:h-2 sm:w-2" />
-            </span>
+      <div className="absolute top-0 -translate-x-1/2 left-1/2">
+        <div className="h-[22rem] w-[22rem] -translate-y-[60%] rounded-full bg-[radial-gradient(circle_at_50%_72%,#5b88fb_0%,#4075F7_48%,#3568e4_100%)] sm:h-[35rem] sm:w-[35rem] sm:-translate-y-[70%]" />
+      </div>
 
-            <span className="whitespace-nowrap text-[9px] font-medium uppercase tracking-[clamp(0.08em,1vw,0.16em)] sm:text-[10px] md:text-xs">
-              {profile.location}
-            </span>
-          </motion.div>
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-white -translate-y-3 sm:-translate-y-6">
+        <span className="mb-1 font-mono text-[7px] uppercase tracking-[0.23em] text-white/60 sm:text-[9px]">
+          Orbit {pageMeta.orbit}
+        </span>
+        <h1 className="whitespace-nowrap text-[clamp(1.55rem,4vw,2.7rem)] font-medium leading-none tracking-[-0.055em]">
+          {pageMeta.accent} {pageMeta.rest}
+        </h1>
+      </div>
 
-        </div>
       </header>
-    </motion.div>
+    </>
   );
 }

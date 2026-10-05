@@ -1,13 +1,4 @@
-import {
-  experience,
-  profile,
-  projects,
-  skillGroups,
-  socialLinks,
-} from "../../data";
-
-const currentExperience =
-  experience.find(({ year }) => year.includes("Present")) || experience[0];
+import { profile, projects, skillGroups, socialLinks } from "../../data";
 
 const row = (key, value, accent = null) => ({ key, value, accent });
 const output = (title, meta, rows) => ({ title, meta, rows });
@@ -28,12 +19,10 @@ export const COMMANDS_LIST = [
 
 export const OUTPUTS = {
   whoami: output("identity", "profile", [
-    row("name", profile.fullName, "value"),
-    row("role", `${currentExperience.title} @ ${currentExperience.company}`),
-    row("based in", profile.location),
-    row("focus", profile.terminalRole),
-    row("likes", profile.likes.join(", ")),
-    row("avoids", profile.dislikes.join(", ")),
+    row("name", profile.firstName.toUpperCase()),
+    row("role", profile.terminalRole.toUpperCase()),
+    row("location", profile.location.toUpperCase()),
+    row("status", "●  AVAILABLE", "status"),
   ]),
   "ls projects": output(
     "projects",

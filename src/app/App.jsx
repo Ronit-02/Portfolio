@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   BrowserRouter,
   Navigate,
@@ -14,6 +14,7 @@ import { ThemeProvider } from "../context/ThemeContext";
 import TopNav from "../components/layout/TopNav";
 import BottomNav from "../components/layout/BottomNav";
 import PortfolioLayerTransition from "../components/layout/PortfolioLayerTransition";
+import SocialRail from "../components/common/SocialRail";
 
 import AboutPage from "../pages/AboutPage";
 import BlogDetailPage from "../pages/BlogDetailPage";
@@ -21,7 +22,10 @@ import BlogPage from "../pages/BlogPage";
 import ContactPage from "../pages/ContactPage";
 import ExperiencePage from "../pages/ExperiencePage";
 import HomePage from "../pages/HomePage";
-import LifeHomePage from "../pages/LifeHomePage";
+// Local life-series concepts are intentionally kept out of production navigation.
+// import LifeHomePage from "../pages/LifeHomePage";
+// import BlueprintHomePage from "../pages/BlueprintHomePage";
+// import XRayHomePage from "../pages/XRayHomePage";
 import PhotosPage from "../pages/PhotosPage";
 import ProjectDetailPage from "../pages/ProjectDetailPage";
 import ProjectsPage from "../pages/ProjectsPage";
@@ -49,11 +53,19 @@ const pageRoutes = {
 function AppInner() {
   const location = useLocation();
   const navigate = useNavigate();
+  const reduceMotion = useReducedMotion();
   const [portfolioTransition, setPortfolioTransition] = useState(null);
 
   const handleNavigate = (page) => {
-    navigate(pageRoutes[page] || "/");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const destination = pageRoutes[page] || "/";
+
+    if (location.pathname === destination) {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+      return;
+    }
+
+    navigate(destination);
+    window.scrollTo({ top: 0, behavior: "auto" });
   };
 
   const handleSelectProject = (project) => {
@@ -69,7 +81,7 @@ function AppInner() {
   const handleSwitchPortfolio = () => {
     if (portfolioTransition) return;
 
-    const destination = location.pathname === "/life" ? "/" : "/life";
+    const destination = location.pathname.startsWith("/life") ? "/" : "/life-1";
     const transitionKey = Date.now();
 
     setPortfolioTransition({
@@ -101,7 +113,7 @@ function AppInner() {
   };
 
   const renderPortfolio = (routeLocation, transitionLayer = false) => {
-    const isLifeSide = routeLocation.pathname === "/life";
+    const isLifeSide = routeLocation.pathname.startsWith("/life");
     const frameActivePage = (() => {
       const path = routeLocation.pathname;
       if (path.startsWith("/projects")) return "projects";
@@ -111,34 +123,60 @@ function AppInner() {
 
     return (
       <div className="min-h-screen bg-white font-satoshi transition-colors duration-300 dark:bg-[#191919]">
-        <TopNav
-          portfolioSide={isLifeSide ? "life" : "work"}
-          onSwitchPortfolio={transitionLayer ? undefined : handleSwitchPortfolio}
-          switchDisabled={transitionLayer || Boolean(portfolioTransition)}
-        />
-
-        <main className="w-full">
-          <AnimatePresence mode="wait">
+        <main className="grid w-full">
+          <AnimatePresence initial={false} mode="sync">
             <motion.div
               key={routeLocation.pathname}
-              initial={transitionLayer ? false : { opacity: 0, y: 8 }}
+              initial={
+                transitionLayer || reduceMotion
+                  ? false
+                  : { opacity: 0, y: 10 }
+              }
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.18, ease: "easeOut" }}
+              exit={
+                reduceMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, y: -6 }
+              }
+              transition={
+                reduceMotion
+                  ? { duration: 0.12 }
+                  : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }
+              }
+              className="col-start-1 row-start-1 min-w-0 self-start transform-gpu [will-change:opacity,transform]"
             >
-              <Routes location={routeLocation}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/life" element={<LifeHomePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/projects" element={<ProjectsPage onSelectProject={handleSelectProject} />} />
-                <Route path="/projects/:projectId" element={<ProjectDetailRoute />} />
-                <Route path="/experience" element={<ExperiencePage />} />
-                <Route path="/blog" element={<BlogPage onSelectBlog={handleSelectBlog} />} />
-                <Route path="/blog/:blogId" element={<BlogDetailRoute />} />
-                <Route path="/photos" element={<PhotosPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
+              {frameActivePage !== "home" && (
+                <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 opacity-[0.12] [background-image:radial-gradient(circle,rgba(24,26,30,.15)_1px,transparent_1px)] [background-size:30px_30px] dark:opacity-[0.05]" />
+              )}
+
+              {frameActivePage !== "home" && (
+                <TopNav
+                  activePage={frameActivePage}
+                  portfolioSide={isLifeSide ? "life" : "work"}
+                  switchDisabled={transitionLayer || Boolean(portfolioTransition)}
+                />
+              )}
+
+              <div className="relative z-10">
+                <Routes location={routeLocation}>
+                  <Route path="/" element={<HomePage />} />
+                  {/* Local concept routes are paused for production.
+                  <Route path="/life" element={<Navigate to="/life-1" replace />} />
+                  <Route path="/life-1" element={<LifeHomePage />} />
+                  <Route path="/life-2" element={<BlueprintHomePage />} />
+                  <Route path="/life-3" element={<XRayHomePage />} />
+                  */}
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/projects" element={<ProjectsPage onSelectProject={handleSelectProject} />} />
+                  <Route path="/projects/:projectId" element={<ProjectDetailRoute />} />
+                  <Route path="/experience" element={<ExperiencePage />} />
+                  <Route path="/blog" element={<BlogPage onSelectBlog={handleSelectBlog} />} />
+                  <Route path="/blog/:blogId" element={<BlogDetailRoute />} />
+                  <Route path="/photos" element={<PhotosPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </div>
             </motion.div>
           </AnimatePresence>
         </main>
@@ -156,6 +194,8 @@ function AppInner() {
         portfolioTransition?.destinationLocation || location,
         Boolean(portfolioTransition)
       )}
+
+      <SocialRail className="fixed bottom-7 left-7 z-[45] hidden min-[840px]:flex" />
 
       <AnimatePresence>
         {portfolioTransition && (

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionWrapper from "../components/common/SectionWrapper";
-import SectionTitle from "../components/common/SectionTitle";
 import { BehanceIcon, CheckIcon, InstagramIcon, LinkedInIcon, XIcon } from "../icons";
 import { contactContent, profile, socialLinks } from "../data";
 import { cn } from "../utils/cn";
@@ -58,8 +57,6 @@ export default function ContactPage() {
 
   return (
     <SectionWrapper>
-      <SectionTitle accent="Get In" rest="Touch" />
-
       <div className="flex flex-col gap-9 sm:gap-12 md:flex-row">
         <motion.div
           initial={{ opacity: 0, x: -24 }}

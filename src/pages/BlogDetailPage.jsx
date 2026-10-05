@@ -3,6 +3,8 @@ import SectionWrapper from "../components/common/SectionWrapper";
 import BackButton from "../components/common/BackButton";
 
 export default function BlogDetailPage({ blog, onBack }) {
+  const paragraphs = Array.isArray(blog.content) ? blog.content : [blog.content];
+
   return (
     <SectionWrapper>
       <BackButton label="Back to Blog" onClick={onBack} />
@@ -28,8 +30,15 @@ export default function BlogDetailPage({ blog, onBack }) {
           <div className="h-px max-w-16 flex-1 bg-gray-200 dark:bg-gray-700" />
         </div>
         <h1 className="mb-10 break-words text-center text-2xl font-bold leading-tight text-black xs:text-3xl dark:text-white">{blog.title}</h1>
-        <div className="max-w-2xl mx-auto">
-          <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed">{blog.content}</p>
+        <div className="mx-auto max-w-2xl space-y-6">
+          {paragraphs.map((paragraph, index) => (
+            <p
+              key={`${blog.id}-paragraph-${index}`}
+              className="text-base leading-relaxed text-gray-600 dark:text-gray-400"
+            >
+              {paragraph}
+            </p>
+          ))}
         </div>
       </motion.div>
     </SectionWrapper>

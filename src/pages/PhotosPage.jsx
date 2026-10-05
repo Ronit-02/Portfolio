@@ -6,7 +6,6 @@ import {
   useState,
 } from "react";
 import SectionWrapper from "../components/common/SectionWrapper";
-import SectionTitle from "../components/common/SectionTitle";
 import FilterTabs from "../components/common/FilterTabs";
 import ImageHoverLabel from "../components/common/ImageHoverLabel";
 import { photos } from "../data";
@@ -162,8 +161,6 @@ export default function PhotosPage() {
 
   return (
     <SectionWrapper>
-      <SectionTitle accent="Artistic" rest="Impressions" />
-
       <FilterTabs
         tabs={TABS}
         activeTab={activeTab}

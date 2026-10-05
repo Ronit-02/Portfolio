@@ -1,3 +1,8 @@
 node_modules
 /build
 /dist
+
+# Local homepage concept explorations (kept out of production commits)
+/src/pages/LifeHomePage.jsx
+/src/pages/BlueprintHomePage.jsx
+/src/pages/XRayHomePage.jsx

@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import SectionWrapper from "../components/common/SectionWrapper";
-import SectionTitle from "../components/common/SectionTitle";
 import FilterTabs from "../components/common/FilterTabs";
 import ProjectCard from "../components/cards/ProjectCard";
 import { projects } from "../data";
@@ -47,8 +46,6 @@ export default function ProjectsPage({ onSelectProject }) {
 
   return (
     <SectionWrapper>
-      <SectionTitle accent="Project" rest="Spotlight" />
-
       <FilterTabs
         tabs={tabs}
         activeTab={activeTab}

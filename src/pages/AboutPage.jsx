@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionWrapper from "../components/common/SectionWrapper";
-import SectionTitle from "../components/common/SectionTitle";
 import ImageHoverLabel from "../components/common/ImageHoverLabel";
 import TagBadge from "../components/common/TagBadge";
 import { ChevronDown } from "../icons";
@@ -44,8 +43,6 @@ export default function AboutPage() {
 
   return (
     <SectionWrapper>
-      <SectionTitle accent="My" rest="Narrative" />
-
       {/* Editorial About Hero */}
       <motion.section
         variants={sectionVariants}

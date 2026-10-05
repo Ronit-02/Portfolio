@@ -9,12 +9,17 @@
 
   html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
     font-size: 17px;
+    overflow-x: clip;
+    overflow-y: scroll;
   }
 
   body {
     @apply m-0 bg-white p-0 font-satoshi antialiased dark:bg-[#191919] dark:text-[#e3e2e0];
     -moz-osx-font-smoothing: grayscale;
+    min-width: 0;
+    overflow-x: clip;
   }
 
   ::-webkit-scrollbar {
@@ -34,6 +39,24 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  .terminal-scrollbar {
+    scrollbar-color: rgba(64, 117, 247, 0.65) transparent;
+    scrollbar-width: thin;
+  }
+
+  .terminal-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .terminal-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .terminal-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(64, 117, 247, 0.65);
   }
 
   .photo-hover-label {

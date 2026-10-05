@@ -97,7 +97,7 @@ export default function FilterTabs({
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 500, damping: 25 }}
               className={cn(
-                "shrink-0 cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-200 sm:px-6 sm:py-2.5 sm:text-base",
+                "shrink-0 cursor-pointer rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-200 sm:px-4 sm:py-2 sm:text-sm",
                 active
                   ? "border-[#4075F7] bg-[#4075F7] text-white"
                   : "border-[#ddd] bg-transparent text-[#555] hover:border-[#4075F7]/40 hover:text-[#4075F7] dark:border-gray-800 dark:text-gray-400 dark:hover:border-[#4075F7]/40"
@@ -115,7 +115,7 @@ export default function FilterTabs({
           aria-label="Show previous filters"
           aria-controls={filterRowId}
           onClick={() => scrollFilters(-1)}
-          className="absolute left-0 top-0 z-10 flex h-9 w-12 items-center justify-start bg-gradient-to-r from-white via-white/95 to-transparent pl-2 sm:hidden dark:from-[#191919] dark:via-[#191919]/95"
+          className="absolute left-0 top-0 z-10 flex h-8 w-12 items-center justify-start bg-gradient-to-r from-white via-white/95 to-transparent pl-2 sm:hidden dark:from-[#191919] dark:via-[#191919]/95"
         >
           <span className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 bg-white text-[#4075F7] shadow-sm dark:border-gray-700 dark:bg-[#1c1c1e]">
             <ChevronIcon direction="left" />
@@ -129,7 +129,7 @@ export default function FilterTabs({
           aria-label="Show more filters"
           aria-controls={filterRowId}
           onClick={() => scrollFilters(1)}
-          className="absolute right-0 top-0 z-10 flex h-9 w-14 items-center justify-end bg-gradient-to-l from-white via-white/95 to-transparent pr-2 sm:hidden dark:from-[#191919] dark:via-[#191919]/95"
+          className="absolute right-0 top-0 z-10 flex h-8 w-14 items-center justify-end bg-gradient-to-l from-white via-white/95 to-transparent pr-2 sm:hidden dark:from-[#191919] dark:via-[#191919]/95"
         >
           <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#4075F7]/25 bg-white text-[#4075F7] shadow-sm dark:border-[#4075F7]/40 dark:bg-[#1c1c1e]">
             <ChevronIcon direction="right" />

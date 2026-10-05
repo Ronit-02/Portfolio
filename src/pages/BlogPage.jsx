@@ -1,12 +1,11 @@
 import { useMemo, useState } from "react";
 import SectionWrapper from "../components/common/SectionWrapper";
-import SectionTitle from "../components/common/SectionTitle";
 import FilterTabs from "../components/common/FilterTabs";
 import BlogCard from "../components/cards/BlogCard";
 import { blogs } from "../data";
 import { createAlphabeticalFilterTabs } from "../utils/filterOptions";
 
-// derived once at module scope — blogs is a constant, no need to recompute
+// Derived once at module scope because blogs is constant and does not need recomputing.
 const ALL_TABS = createAlphabeticalFilterTabs(
   blogs.map((blog) => blog.category)
 );
@@ -21,7 +20,6 @@ export default function BlogPage({ onSelectBlog }) {
 
   return (
     <SectionWrapper>
-      <SectionTitle accent="Mindful" rest="Reflections" />
       <FilterTabs
         tabs={ALL_TABS}
         activeTab={activeTab}

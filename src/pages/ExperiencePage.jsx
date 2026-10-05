@@ -8,7 +8,6 @@ import {
 } from "react";
 import { motion } from "framer-motion";
 import SectionWrapper from "../components/common/SectionWrapper";
-import SectionTitle from "../components/common/SectionTitle";
 import { experience } from "../data";
 import { cn } from "../utils/cn";
 
@@ -27,6 +26,8 @@ const ROAD_END_EXTRA = 80;
 
 const ROAD_BASE_STROKE_WIDTH = 3;
 const ROAD_ACTIVE_STROKE_WIDTH = 3.75;
+const ROAD_PENDING_COLOR = "#cbd0d8";
+const EXPERIENCE_BLUE = "#4075F7";
 
 const ROAD_REVEAL_TRANSITION = {
   duration: 1.45,
@@ -61,21 +62,21 @@ const MAX_ROAD_GAP_PX = 300;
 
 const THEMES = {
   light: {
-    roadBase: "#e6e8ec",
-    roadActive: "#4075F7",
+    roadBase: ROAD_PENDING_COLOR,
+    roadActive: EXPERIENCE_BLUE,
 
     dotHalo: "rgba(64,117,247,0.12)",
-    dotInactiveFill: "#ffffff",
-    dotInactiveStroke: "#d8dce3",
+    dotInactiveFill: ROAD_PENDING_COLOR,
+    dotInactiveStroke: ROAD_PENDING_COLOR,
   },
 
   dark: {
-    roadBase: "#3a3a3a",
-    roadActive: "#60A5FA",
+    roadBase: ROAD_PENDING_COLOR,
+    roadActive: EXPERIENCE_BLUE,
 
-    dotHalo: "rgba(96,165,250,0.16)",
-    dotInactiveFill: "#191919",
-    dotInactiveStroke: "#5a5a5a",
+    dotHalo: "rgba(64,117,247,0.16)",
+    dotInactiveFill: ROAD_PENDING_COLOR,
+    dotInactiveStroke: ROAD_PENDING_COLOR,
   },
 };
 
@@ -715,7 +716,6 @@ export default function ExperiencePage() {
 
   return (
     <SectionWrapper className="pb-60">
-      <SectionTitle accent="My Story" rest="Unfolds" />
 
       <motion.div
         ref={containerRef}
@@ -858,35 +858,31 @@ export default function ExperiencePage() {
                 <motion.article
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -5 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ type: "spring", stiffness: 300, damping: 24 }}
                   className={cn(
-                    "group relative box-border w-full overflow-hidden rounded-[1.4rem] border [overflow-wrap:break-word] transition-[border-color,background-color,box-shadow] duration-300",
+                    "relative box-border w-full overflow-hidden rounded-[1.4rem] border [overflow-wrap:break-word] transition-[border-color,background-color,box-shadow] duration-300",
                     "bg-white shadow-[0_1px_2px_rgba(15,23,42,0.03),0_12px_36px_rgba(15,23,42,0.045)]",
-                    "hover:border-[#4075F7]/35 hover:shadow-[0_18px_48px_rgba(64,117,247,0.13)]",
-                    "dark:bg-[#202020] dark:shadow-[0_1px_2px_rgba(0,0,0,0.18),0_14px_34px_rgba(0,0,0,0.16)] dark:hover:border-blue-400/40 dark:hover:bg-[#242424] dark:hover:shadow-[0_18px_44px_rgba(0,0,0,0.24)]",
+                    "dark:bg-[#202020] dark:shadow-[0_1px_2px_rgba(0,0,0,0.18),0_14px_34px_rgba(0,0,0,0.16)]",
                     isCompact ? "px-4 py-5 xs:px-5" : "px-7 py-6",
                     active
-                      ? "border-[#4075F7]/30 bg-[#fbfcff] shadow-[0_16px_44px_rgba(64,117,247,0.11)] dark:border-blue-400/35 dark:bg-[#232830]"
+                      ? "border-[#4075F7]/30 bg-[#fbfcff] shadow-[0_16px_44px_rgba(64,117,247,0.11)] dark:border-[#4075F7]/35 dark:bg-[#232830]"
                       : "border-gray-200/80 dark:border-[#373737]"
                   )}
                 >
                   <div
                     aria-hidden="true"
                     className={cn(
-                      "absolute inset-y-0 left-0 w-1 origin-bottom rounded-r-full bg-[#4075F7] transition-transform duration-500 dark:bg-blue-400",
-                      active
-                        ? "scale-y-100"
-                        : "scale-y-0 group-hover:scale-y-100"
+                      "absolute inset-y-0 left-0 w-1 origin-bottom rounded-r-full bg-[#4075F7] transition-transform duration-500",
+                      active ? "scale-y-100" : "scale-y-0"
                     )}
                   />
 
                   <div
                     aria-hidden="true"
                     className={cn(
-                      "absolute -right-16 -top-20 h-40 w-40 rounded-full bg-[#4075F7]/[0.07] blur-2xl transition-opacity duration-500 dark:bg-blue-400/[0.08]",
-                      active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                      "absolute -right-16 -top-20 h-40 w-40 rounded-full bg-[#4075F7]/[0.07] blur-2xl transition-opacity duration-500 dark:bg-[#4075F7]/[0.08]",
+                      active ? "opacity-100" : "opacity-0"
                     )}
                   />
 
@@ -895,8 +891,8 @@ export default function ExperiencePage() {
                       className={cn(
                         "rounded-full border px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.12em] transition-colors duration-300",
                         active
-                          ? "border-[#4075F7]/20 bg-[#4075F7]/[0.07] text-[#4075F7] dark:border-blue-400/25 dark:bg-blue-400/10 dark:text-blue-300"
-                          : "border-gray-200 bg-gray-50 text-gray-500 group-hover:border-[#4075F7]/20 group-hover:text-[#4075F7] dark:border-[#404040] dark:bg-[#292929] dark:text-[#aaa9a6] dark:group-hover:border-blue-400/30 dark:group-hover:text-blue-300"
+                          ? "border-[#4075F7]/20 bg-[#4075F7]/[0.07] text-[#4075F7] dark:border-[#4075F7]/25 dark:bg-[#4075F7]/10 dark:text-[#4075F7]"
+                          : "border-gray-200 bg-gray-50 text-gray-500 dark:border-[#404040] dark:bg-[#292929] dark:text-[#aaa9a6]"
                       )}
                     >
                       {exp.year}
@@ -909,8 +905,10 @@ export default function ExperiencePage() {
 
                   <h3
                     className={cn(
-                      "relative mt-6 font-bold leading-[1.08] tracking-[-0.03em] text-gray-950 transition-colors duration-300 dark:text-[#e3e2e0]",
-                      "group-hover:text-[#4075F7] dark:group-hover:text-blue-300",
+                      "relative mt-6 font-bold leading-[1.08] tracking-[-0.03em] transition-colors duration-300",
+                      active
+                        ? "text-gray-700 dark:text-[#e3e2e0]"
+                        : "text-[#8b93a1] dark:text-[#8c8c8a]",
                       isCompact ? "text-[1.2rem]" : "text-[1.35rem]"
                     )}
                   >
@@ -922,14 +920,13 @@ export default function ExperiencePage() {
                       className={cn(
                         "h-1.5 w-1.5 rounded-full transition-[background-color,box-shadow] duration-300",
                         active
-                          ? "bg-[#4075F7] shadow-[0_0_0_4px_rgba(64,117,247,0.1)] dark:bg-blue-400 dark:shadow-[0_0_0_4px_rgba(96,165,250,0.12)]"
-                          : "bg-gray-300 group-hover:bg-[#4075F7] dark:bg-gray-600 dark:group-hover:bg-blue-400"
+                          ? "bg-[#4075F7] shadow-[0_0_0_4px_rgba(64,117,247,0.1)] dark:shadow-[0_0_0_4px_rgba(64,117,247,0.12)]"
+                          : "bg-gray-300 dark:bg-gray-600"
                       )}
                     />
                     <p
                       className={cn(
                         "text-[10px] font-bold uppercase text-gray-500 transition-colors duration-300 dark:text-[#aaa9a6]",
-                        "group-hover:text-gray-700 dark:group-hover:text-gray-200",
                         isCompact ? "tracking-[0.14em]" : "tracking-[0.18em]"
                       )}
                     >
